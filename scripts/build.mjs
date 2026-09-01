@@ -39,6 +39,22 @@ function loadCategories() {
   return parsed.categories || [];
 }
 
+// Calculator-only product/brand data (see content/products.yml) —
+// intentionally not loaded into db/schema.sql or exposed through the
+// component/alias/category tables. It never appears on a wiki page,
+// only in the ventilation calculator's optional brand filter.
+function loadProducts(componentSlugs) {
+  const text = readFileSync(join(root, 'content', 'products.yml'), 'utf8');
+  const parsed = loadYaml(text);
+  const products = parsed.products || [];
+  for (const p of products) {
+    if (!componentSlugs.has(p.component)) {
+      throw new Error(`build aborted: products.yml references unknown component "${p.component}" (${p.brand} ${p.name})`);
+    }
+  }
+  return products;
+}
+
 function buildDatabase(records, categories) {
   const schema = readFileSync(join(root, 'db', 'schema.sql'), 'utf8');
   const db = new DatabaseSync(':memory:');
@@ -213,6 +229,7 @@ function exportJson(db) {
 function main() {
   const records = loadSeeds();
   const categories = loadCategories();
+  const products = loadProducts(new Set(records.map((r) => r.slug)));
   const { db } = buildDatabase(records, categories);
   const { components, categories: categoriesOut, searchIndex } = exportJson(db);
 
@@ -220,8 +237,9 @@ function main() {
   writeFileSync(join(outDir, 'components.json'), JSON.stringify(components, null, 2));
   writeFileSync(join(outDir, 'categories.json'), JSON.stringify(categoriesOut, null, 2));
   writeFileSync(join(outDir, 'search-index.json'), JSON.stringify(searchIndex, null, 2));
+  writeFileSync(join(outDir, 'products.json'), JSON.stringify(products, null, 2));
 
-  console.log(`Built ${Object.keys(components).length} components, ${categoriesOut.length} categories, ${searchIndex.length} search index entries.`);
+  console.log(`Built ${Object.keys(components).length} components, ${categoriesOut.length} categories, ${searchIndex.length} search index entries, ${products.length} calculator products.`);
   console.log(`-> ${outDir}`);
 }
 

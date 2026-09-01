@@ -1,0 +1,69 @@
+# Brand/product-specific NFA data for the ventilation calculator's
+# optional brand filter. Deliberately separate from content/components/
+# — this is calculator input, not wiki content, and never surfaces on
+# a component's reference page. The wiki stays product-agnostic
+# ("what class of thing can replace it"); this file is what lets the
+# calculator go one step further, when asked for, into "here's what
+# GAF's actual ridge vent line requires."
+#
+# A starting set for the two brands already most present in this
+# content (GAF, Lomanco — both already show up repeatedly in existing
+# aliases), not a comprehensive catalog. Every entry is a real,
+# researched current spec, not a reuse of the calculator's generic
+# reference figures under a brand's name — but products change, get
+# discontinued, and get re-rated, so treat every number here as
+# something to reconfirm against the manufacturer's current published
+# spec before relying on it, same discipline as everything else in
+# this project.
+products:
+  - brand: GAF
+    name: Cobra Rigid Vent 3
+    component: ridge-vent
+    nfaPerLinearFoot: 18
+    sourceNote: GAF product data sheet and retailer spec pages
+
+  - brand: GAF
+    name: Cobra RidgeRunner
+    component: ridge-vent
+    nfaPerLinearFoot: 12.5
+    sourceNote: GAF product pages
+
+  - brand: GAF
+    name: Master Flow High Capacity Dome Vent
+    component: static-roof-vent
+    nfaPerUnit: 144
+    sourceNote: GAF product pages
+
+  - brand: GAF
+    name: Master Flow 12" Roof Turbine
+    component: turbine-vent
+    nfaPerUnit: 120
+    unitLabel: 12" throat
+    sourceNote: GAF/retailer product listings
+
+  - brand: GAF
+    name: Master Flow Under Eave Soffit Vent
+    component: soffit-vent
+    nfaPerUnit: 50
+    unitLabel: 16" x 8" individual vent, not continuous strip
+    sourceNote: retailer product listing (Amazon)
+
+  - brand: Lomanco
+    name: LomanCool 750
+    component: static-roof-vent
+    nfaPerUnit: 50
+    unitLabel: 16" OAW slant-back louver
+    sourceNote: Lomanco/retailer spec pages
+
+  - brand: Lomanco
+    name: Omni Series Ridge Vent
+    component: ridge-vent
+    nfaPerLinearFoot: 18
+    sourceNote: lomanco.com
+
+  - brand: Lomanco
+    name: Cirk-L-Vent CV-4
+    component: soffit-vent
+    nfaPerUnit: 3
+    unitLabel: individual round intake vent, not continuous strip
+    sourceNote: lomanco.com / retailer spec pages

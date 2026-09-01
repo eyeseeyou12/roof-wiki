@@ -183,7 +183,53 @@ function estimateOption(component, requiredNfaSqIn, perUnitField) {
   return result;
 }
 
-export function estimateExhaustOptions(exhaustNfaSqIn) {
+const EXHAUST_COMPONENTS = ['ridge-vent', 'static-roof-vent', 'turbine-vent'];
+const INTAKE_COMPONENTS = ['soffit-vent'];
+
+// Translates a required NFA into quantities for a specific brand's
+// real products (content/products.yml), rather than the generic
+// TYPICAL_NFA reference figures. One entry per matching product, not
+// per component — a brand can have more than one product for the
+// same component (GAF has two ridge vent lines with meaningfully
+// different NFA), and collapsing that down to one number would hide
+// exactly the kind of variance this whole feature exists to surface.
+//
+// Components the brand has no product data for are simply absent
+// from the result, never silently backfilled with the generic
+// figure — that would mislabel an unverified estimate as the brand's
+// own number.
+function estimateBrandOptions(componentSlugs, requiredNfaSqIn, brand, products) {
+  if (!Array.isArray(products)) {
+    throw new VentilationCalculatorError('products must be an array (see content/products.yml)');
+  }
+  const matches = products.filter(
+    (p) => componentSlugs.includes(p.component) && p.brand.toLowerCase() === brand.toLowerCase()
+  );
+  return matches.map((p) => {
+    const perLinearFoot = p.nfaPerLinearFoot != null;
+    const perUnit = p.nfaPerUnit ?? p.nfaPerLinearFoot;
+    return {
+      component: p.component,
+      brand: p.brand,
+      productName: p.name,
+      quantity: Math.ceil(requiredNfaSqIn / perUnit),
+      unit: `${perLinearFoot ? 'linear feet' : 'units'}${p.unitLabel ? ` (${p.unitLabel})` : ''}`,
+      nfaRating: perUnit,
+      sourceNote: p.sourceNote ?? null,
+    };
+  });
+}
+
+// Generic (no brand filter) or brand-specific exhaust/intake options.
+// Pass { brand, products } to filter to one brand's real products;
+// omit both to get the generic component-class estimate, same as
+// before this feature existed. A brand filter with no matching
+// products for a given component returns fewer entries, not a
+// generic fallback mislabeled as that brand.
+export function estimateExhaustOptions(exhaustNfaSqIn, { brand = null, products = null } = {}) {
+  if (brand) {
+    return estimateBrandOptions(EXHAUST_COMPONENTS, exhaustNfaSqIn, brand, products);
+  }
   return [
     estimateOption('ridge-vent', exhaustNfaSqIn, 'perLinearFoot'),
     estimateOption('static-roof-vent', exhaustNfaSqIn, 'perUnit'),
@@ -191,8 +237,21 @@ export function estimateExhaustOptions(exhaustNfaSqIn) {
   ];
 }
 
-export function estimateIntakeOptions(intakeNfaSqIn) {
+export function estimateIntakeOptions(intakeNfaSqIn, { brand = null, products = null } = {}) {
+  if (brand) {
+    return estimateBrandOptions(INTAKE_COMPONENTS, intakeNfaSqIn, brand, products);
+  }
   return [estimateOption('soffit-vent', intakeNfaSqIn, 'perLinearFoot')];
+}
+
+// Distinct brand names available in a loaded products list — for a UI
+// to populate a brand filter dropdown/chips without hardcoding the
+// list (content/products.yml is expected to grow).
+export function listAvailableBrands(products) {
+  if (!Array.isArray(products)) {
+    throw new VentilationCalculatorError('products must be an array (see content/products.yml)');
+  }
+  return [...new Set(products.map((p) => p.brand))].sort();
 }
 
 // Separated attic spaces (a garage attic cut off by a firewall, an
