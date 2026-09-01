@@ -7,6 +7,8 @@ aliases:
   - two-piece flashing (manufacturer)
   - retrofit pipe flashing (manufacturer)
   - zipper boot (field)
+  - Bullet Boot (brand — a stretch/cut-to-fit retrofit boot line)
+  - DuraFlo (brand — a stretch-fit retrofit boot line)
 links:
   - see_also: pipe-boot
   - see_also: mast-and-line-penetration

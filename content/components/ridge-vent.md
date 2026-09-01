@@ -9,6 +9,7 @@ aliases:
   - roll vent (field — specifically the flexible rolled type)
   - peak vent (field)
   - aluminum ridge vent (field — the older style)
+  - Cobra (brand — GAF's ridge vent product line)
 links:
   - governed_by: intake-must-equal-or-exceed-exhaust
   - governed_by: dont-mix-exhaust-types

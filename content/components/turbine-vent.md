@@ -7,6 +7,7 @@ aliases:
   - wind turbine (field)
   - spinner (field)
   - turbine (field)
+  - spinning thing on my roof (descriptive)
 links:
   - see_also: powered-attic-ventilator
 sources: manufacturer catalogs, trade forums, code references, roofing trade sites
