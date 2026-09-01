@@ -1,6 +1,7 @@
 ---
 name: Over-fascia vent
 confidence: medium
+categories: [intake]
 aliases:
   - fascia vent (field)
   - fascia strip vent (manufacturer)

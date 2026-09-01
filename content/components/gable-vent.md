@@ -1,6 +1,7 @@
 ---
 name: Gable vent
 confidence: high
+categories: [vents, intake]
 aliases:
   - gable end vent (field)
   - louver vent (field)

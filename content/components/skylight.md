@@ -1,6 +1,7 @@
 ---
 name: Skylight
 confidence: high
+categories: [penetrations]
 aliases:
   - roof window (manufacturer — technically a different product, but used loosely)
   - sky light (field)

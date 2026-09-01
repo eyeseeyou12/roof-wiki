@@ -1,6 +1,7 @@
 ---
 name: Static roof vent
 confidence: high
+categories: [vents]
 aliases:
   - box vent (field)
   - turtle vent (field)

@@ -1,6 +1,7 @@
 ---
 name: Vent cap
 confidence: high
+categories: [penetrations]
 aliases:
   - rain cap (field — also standard manufacturer terminology)
   - flue cap (field)

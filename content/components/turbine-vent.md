@@ -1,6 +1,7 @@
 ---
 name: Turbine vent
 confidence: high
+categories: [vents]
 aliases:
   - whirlybird (field)
   - wind turbine (field)

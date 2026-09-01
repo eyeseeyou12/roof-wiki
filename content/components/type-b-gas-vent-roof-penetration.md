@@ -1,6 +1,7 @@
 ---
 name: Type B gas vent roof penetration
 confidence: thin
+categories: [penetrations]
 aliases:
   - B-vent (manufacturer — also used informally in the field)
   - double-wall flue (field)

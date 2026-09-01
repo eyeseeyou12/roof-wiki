@@ -1,6 +1,7 @@
 ---
 name: Shingle-over intake vent
 confidence: medium
+categories: [intake]
 aliases:
   - smart vent (brand — DCI, partly genericized)
   - roof-top intake vent (manufacturer)

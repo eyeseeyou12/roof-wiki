@@ -1,6 +1,7 @@
 ---
 name: Soffit vent
 confidence: high
+categories: [intake]
 aliases:
   - eave vent (field)
   - under-eave vent (manufacturer)

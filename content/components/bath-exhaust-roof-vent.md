@@ -1,6 +1,7 @@
 ---
 name: Bath exhaust roof vent
 confidence: medium
+categories: [penetrations]
 aliases:
   - bathroom vent (field)
   - bath fan vent (field)

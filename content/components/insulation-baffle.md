@@ -1,6 +1,7 @@
 ---
 name: Insulation baffle
 confidence: high
+categories: [intake]
 aliases:
   - rafter vent (manufacturer)
   - vent chute (field)

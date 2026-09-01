@@ -1,6 +1,7 @@
 ---
 name: Off-ridge vent
 confidence: medium
+categories: [vents]
 aliases:
   - low-profile vent (manufacturer)
   - slant vent (field)

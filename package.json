@@ -5,7 +5,8 @@
   "description": "A reference for identifying roof components, accessories, and penetrations.",
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs"
   },
   "repository": {
     "type": "git",
@@ -13,6 +14,7 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "js-yaml": "^5.4.1"
+    "js-yaml": "^5.4.1",
+    "minisearch": "^7.2.0"
   }
 }

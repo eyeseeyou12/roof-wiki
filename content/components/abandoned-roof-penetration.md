@@ -1,6 +1,7 @@
 ---
 name: Abandoned roof penetration
 confidence: medium
+categories: [penetrations]
 aliases:
   - capped penetration (field)
   - dead vent (field)

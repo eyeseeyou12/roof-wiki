@@ -1,6 +1,7 @@
 ---
 name: Dryer exhaust roof vent
 confidence: high
+categories: [penetrations]
 aliases:
   - dryer vent (field)
   - dryer jack (field — DryerJack has partly genericized)

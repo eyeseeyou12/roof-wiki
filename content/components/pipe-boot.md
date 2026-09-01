@@ -1,6 +1,7 @@
 ---
 name: Pipe boot
 confidence: high
+categories: [penetrations]
 aliases:
   - pipe jack (field)
   - roof jack (field)

@@ -1,6 +1,7 @@
 ---
 name: Ridge vent
 confidence: high
+categories: [vents]
 aliases:
   - continuous ridge vent (manufacturer)
   - shingle-over ridge vent (manufacturer)

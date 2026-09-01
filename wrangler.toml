@@ -1,0 +1,12 @@
+name = "roof-wiki"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "_site"
+
+# search_miss is the only table that lives here — everything else
+# (component, alias, category, and the two joins) is static JSON
+# shipped to the client, built from content/ by scripts/build.mjs.
+# See db/migrations/ for this database's schema.
+[[d1_databases]]
+binding = "DB"
+database_name = "roof-wiki-search-miss"
+database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"

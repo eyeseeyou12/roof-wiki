@@ -1,6 +1,7 @@
 ---
 name: Vented drip edge
 confidence: medium
+categories: [intake]
 aliases:
   - drip edge vent (field)
   - edge vent (manufacturer)

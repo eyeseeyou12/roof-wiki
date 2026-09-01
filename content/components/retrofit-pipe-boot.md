@@ -1,6 +1,7 @@
 ---
 name: Retrofit pipe boot
 confidence: medium
+categories: [penetrations]
 aliases:
   - split boot (field)
   - two-piece flashing (manufacturer)

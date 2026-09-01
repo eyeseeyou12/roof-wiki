@@ -1,6 +1,7 @@
 ---
 name: Tubular skylight
 confidence: high
+categories: [penetrations]
 aliases:
   - solar tube (field)
   - sun tunnel (manufacturer — VELUX term)

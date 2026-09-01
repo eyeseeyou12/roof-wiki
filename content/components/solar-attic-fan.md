@@ -1,6 +1,7 @@
 ---
 name: Solar attic fan
 confidence: medium
+categories: [vents]
 aliases:
   - solar powered attic ventilator (manufacturer)
   - solar attic vent (manufacturer)

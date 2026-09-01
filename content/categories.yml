@@ -1,0 +1,19 @@
+# First-pass category taxonomy. Not sourced from the inventory batches —
+# they never define a formal category tree, only the loose framing
+# "penetrations, vents, and the intake side." This is my first cut at
+# turning that into three flat, sibling categories so "browse by
+# category" has something to browse. Treat it as a draft: cheap to
+# revise, since components just reference these by slug.
+#
+# A component can belong to more than one (e.g. gable-vent is both a
+# vent and, situationally, intake).
+categories:
+  - slug: penetrations
+    name: Penetrations
+    sort_order: 1
+  - slug: vents
+    name: Vents
+    sort_order: 2
+  - slug: intake
+    name: Intake
+    sort_order: 3

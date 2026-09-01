@@ -1,6 +1,7 @@
 ---
 name: Mast and line penetration
 confidence: medium
+categories: [penetrations]
 aliases:
   - satellite mast (field)
   - dish mount (field)

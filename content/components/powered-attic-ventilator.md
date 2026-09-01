@@ -1,6 +1,7 @@
 ---
 name: Powered attic ventilator
 confidence: high
+categories: [vents]
 aliases:
   - power vent (field)
   - PAV (manufacturer — also used in inspection reports)
