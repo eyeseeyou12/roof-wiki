@@ -83,6 +83,65 @@ export function estimateAtticFloorAreaFromRoofSegments(segments) {
   return round1(total);
 }
 
+// Three ways to arrive at atticSquareFootage for calculateRequiredNfa,
+// in increasing order of precision — all optional, none required:
+//   1. Roof segments only (estimateAtticFloorAreaFromRoofSegments):
+//      corrects for pitch, nothing else. The system's best-effort
+//      default when only a roof report is available.
+//   2. Roof segments + eave length + overhang depth (this function):
+//      also corrects for the overhang — aerial roof measurements are
+//      taken to the outer roofline, which extends past the exterior
+//      walls by the overhang depth, and that strip isn't attic space.
+//      Both eaveLengthFt and overhangDepthFt are optional; the
+//      correction is skipped (not estimated) if either is missing,
+//      since guessing an overhang depth would be inventing a number.
+//   3. Direct entry: skip both of the above and pass a known/measured
+//      atticSquareFootage straight to calculateRequiredNfa — the
+//      fallback when there's no roof report at all.
+//
+// The correction approximates the overhang as a strip of uniform
+// depth along the eaves only (not rakes, hips, or valleys, which
+// typically carry little or no overhang), using eaveLengthFt *
+// overhangDepthFt. That slightly over-subtracts at corners, where the
+// strip overlaps itself — a minor effect at typical overhang depths
+// relative to typical house dimensions, not corrected for here.
+export function estimateAtticFloorArea({ segments, eaveLengthFt = null, overhangDepthFt = null }) {
+  const pitchOnlyEstimate = estimateAtticFloorAreaFromRoofSegments(segments);
+
+  if (eaveLengthFt == null || overhangDepthFt == null) {
+    return {
+      atticSquareFootage: pitchOnlyEstimate,
+      method: 'pitch-only',
+      overhangCorrectionApplied: false,
+    };
+  }
+
+  if (!Number.isFinite(eaveLengthFt) || eaveLengthFt <= 0) {
+    throw new VentilationCalculatorError('eaveLengthFt must be a positive number');
+  }
+  if (!Number.isFinite(overhangDepthFt) || overhangDepthFt < 0) {
+    throw new VentilationCalculatorError('overhangDepthFt must be a non-negative number');
+  }
+  if (overhangDepthFt > 10) {
+    // Real overhangs run roughly 6 inches to 3 feet. A value this
+    // large almost certainly means inches were entered where feet
+    // were expected — better to reject than silently produce a
+    // wildly wrong (or negative-clamped) estimate.
+    throw new VentilationCalculatorError('overhangDepthFt looks too large to be feet — check units (did you mean inches?)');
+  }
+
+  const overhangAreaSqFt = eaveLengthFt * overhangDepthFt;
+  const corrected = round1(Math.max(pitchOnlyEstimate - overhangAreaSqFt, 0));
+
+  return {
+    atticSquareFootage: corrected,
+    method: 'pitch-and-overhang',
+    overhangCorrectionApplied: true,
+    pitchOnlyEstimate,
+    overhangAreaSqFt: round1(overhangAreaSqFt),
+  };
+}
+
 export function calculateRequiredNfa({ atticSquareFootage, exceptionConditionsConfirmed = false }) {
   if (!Number.isFinite(atticSquareFootage) || atticSquareFootage <= 0) {
     throw new VentilationCalculatorError('atticSquareFootage must be a positive number');
