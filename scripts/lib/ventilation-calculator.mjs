@@ -41,6 +41,48 @@ export const CFM_SIZED_COMPONENTS = ['powered-attic-ventilator', 'solar-attic-fa
 
 export class VentilationCalculatorError extends Error {}
 
+// A sloped roof plane at pitch rise/run covers more surface area than
+// the horizontal attic floor beneath it. Roof measurement reports
+// (aerial/photogrammetry services, e.g. Roofr, EagleView, Hover) give
+// the sloped surface area, not attic floor area — feeding that number
+// straight into calculateRequiredNfa overstates what's needed by a
+// meaningful margin (about 8% at a 5/12 pitch, more at steeper
+// pitches). This converts one roof plane's sloped area to its
+// horizontal footprint: floorArea = roofArea * run / sqrt(rise^2 + run^2).
+export function roofAreaToFloorArea(roofAreaSqFt, pitchRise, pitchRun = 12) {
+  if (!Number.isFinite(roofAreaSqFt) || roofAreaSqFt <= 0) {
+    throw new VentilationCalculatorError('roofAreaSqFt must be a positive number');
+  }
+  if (!Number.isFinite(pitchRise) || pitchRise < 0) {
+    throw new VentilationCalculatorError('pitchRise must be a non-negative number');
+  }
+  const slopeFactor = Math.sqrt(pitchRise * pitchRise + pitchRun * pitchRun) / pitchRun;
+  return round1(roofAreaSqFt / slopeFactor);
+}
+
+// A roof is often more than one pitch (this module's own test data
+// includes a real report with 5/12 and 7/12 sections). Sum each
+// segment's converted floor area separately rather than applying one
+// pitch to the whole roof.
+//
+// Important limits on what this estimates, worth surfacing in any UI
+// built on this: it assumes the whole roof footprint sits over
+// attic space, which often isn't true — garages, cathedral/vaulted
+// ceilings, and porches have roof area but no attic beneath them.
+// Treat the result as a starting point, the same way the rest of this
+// app treats "go measure" — not a substitute for an actual attic
+// floor measurement when precision matters.
+export function estimateAtticFloorAreaFromRoofSegments(segments) {
+  if (!Array.isArray(segments) || segments.length === 0) {
+    throw new VentilationCalculatorError('segments must be a non-empty array of { roofAreaSqFt, pitchRise, pitchRun? }');
+  }
+  const total = segments.reduce(
+    (sum, seg) => sum + roofAreaToFloorArea(seg.roofAreaSqFt, seg.pitchRise, seg.pitchRun ?? 12),
+    0
+  );
+  return round1(total);
+}
+
 export function calculateRequiredNfa({ atticSquareFootage, exceptionConditionsConfirmed = false }) {
   if (!Number.isFinite(atticSquareFootage) || atticSquareFootage <= 0) {
     throw new VentilationCalculatorError('atticSquareFootage must be a positive number');
@@ -92,6 +134,31 @@ export function estimateExhaustOptions(exhaustNfaSqIn) {
 
 export function estimateIntakeOptions(intakeNfaSqIn) {
   return [estimateOption('soffit-vent', intakeNfaSqIn, 'perLinearFoot')];
+}
+
+// Separated attic spaces (a garage attic cut off by a firewall, an
+// addition that isn't actually open to the original attic) each need
+// their own ventilation calculation — see the separated-attic-spaces
+// rule for how to recognize one. This runs calculateRequiredNfa
+// independently per section rather than summing square footage into
+// one shared number, which is exactly the mistake that rule warns
+// against: a combined total can look adequate while one isolated
+// section is still under-ventilated.
+export function calculateForSections(sections) {
+  if (!Array.isArray(sections) || sections.length === 0) {
+    throw new VentilationCalculatorError('sections must be a non-empty array of { label, atticSquareFootage, exceptionConditionsConfirmed? }');
+  }
+  const results = sections.map((section) => ({
+    label: section.label ?? null,
+    ...calculateRequiredNfa(section),
+  }));
+  return {
+    sections: results,
+    // Informational only — sq ft/NFA totaled across sections for a
+    // materials-quantity view. Never use this combined total to size
+    // or balance any single section's vents.
+    combinedTotalNfaSqIn: round1(results.reduce((sum, r) => sum + r.totalNfaSqIn, 0)),
+  };
 }
 
 function round1(n) {
