@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ventilation calculator — roof-wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Attic ventilation calculator</h1>
+    <p class="subtitle">
+      Estimates required net free area from <a href="/component.html?slug=attic-ventilation-ratio">IRC R806.2</a>,
+      then translates it into quantities of generic vent types (or a specific brand's real products).
+      This is a starting point to verify, not a spec — go measure.
+    </p>
+
+    <form id="calculator-form">
+      <div id="sections-container"></div>
+
+      <button type="button" id="add-section" class="secondary">+ Add a separated attic section</button>
+
+      <fieldset>
+        <legend>Options</legend>
+        <div class="field-row">
+          <div>
+            <label for="exception-confirmed" style="display:inline;">
+              <input type="checkbox" id="exception-confirmed" style="width:auto;display:inline;vertical-align:middle;">
+              Use the 1/300 exception instead of the 1/150 baseline
+            </label>
+            <p class="helper-text">Only check this if you've confirmed the exception's conditions apply — see the <a href="/component.html?slug=attic-ventilation-ratio">ventilation ratio</a> entry for what those are and how they vary by code edition. Defaults to the conservative 1/150 baseline.</p>
+          </div>
+          <div>
+            <label for="brand-select">Show products for a specific brand</label>
+            <select id="brand-select"><option value="">Generic reference figures</option></select>
+          </div>
+        </div>
+      </fieldset>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <p id="calculator-error" class="notice" hidden></p>
+    <div id="results-container"></div>
+  </main>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('calculator');
+  </script>
+  <script type="module" src="/js/calculator-page.mjs"></script>
+</body>
+</html>

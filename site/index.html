@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>roof-wiki — identify roof components</title>
+  <meta name="description" content="Look up what's on your roof: penetrations, vents, and intake — by name, by category, or (soon) by photo.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>What's on your roof?</h1>
+    <p class="subtitle">A reference for roof penetrations, vents, and intake — what something's called, what it does, and what class of thing can replace it. Not a place to buy anything.</p>
+
+    <div class="doors">
+      <a class="door" href="/search.html" data-door="search">
+        <span class="eyebrow">Search a name</span>
+        <h3>Know a name, need to know what it is?</h3>
+        <p>Search by what's stamped on it, what a contractor called it, or a nickname you heard. Search covers every alias, not just the official name.</p>
+      </a>
+
+      <a class="door" href="/browse.html" data-door="browse">
+        <span class="eyebrow">Browse categories</span>
+        <h3>Not sure what to search for?</h3>
+        <p>Browse penetrations, vents, and intake components by category to see what's out there.</p>
+      </a>
+
+      <div class="door disabled" data-door="photo-id" aria-disabled="true">
+        <span class="eyebrow">Coming soon</span>
+        <h3>Identify by photo</h3>
+        <p>Not built yet. The plan is to let you upload or take a photo of something on your roof and get back likely matches.</p>
+      </div>
+    </div>
+
+    <h2>Sizing your attic ventilation?</h2>
+    <p class="subtitle">
+      Use the <a href="/calculator.html">ventilation calculator</a> to work out required net free area from a roof
+      report or a direct measurement, and see what quantity of vent it takes to cover it.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>roof-wiki is a reference, not an estimating tool — it never names a part number, only what class of thing can replace something and what to go measure.</p>
+  </footer>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('home');
+  </script>
+</body>
+</html>

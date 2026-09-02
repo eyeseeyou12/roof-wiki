@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse categories — roof-wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="importmap">
+    { "imports": { "minisearch": "/lib/vendor/minisearch.js" } }
+  </script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Browse categories</h1>
+    <p class="subtitle">A first-pass grouping — penetrations, vents, and intake. Some components sit in more than one.</p>
+    <ul id="category-list" class="card-list"></ul>
+  </main>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('browse');
+  </script>
+  <script type="module" src="/js/browse-page.mjs"></script>
+</body>
+</html>

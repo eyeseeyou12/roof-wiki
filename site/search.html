@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search — roof-wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="importmap">
+    { "imports": { "minisearch": "/lib/vendor/minisearch.js" } }
+  </script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1>Search</h1>
+    <p class="subtitle">Search by official name or any alias — a nickname, a manufacturer term, a regional term.</p>
+
+    <form id="search-form" role="search">
+      <label for="q">Name or alias</label>
+      <input type="search" id="q" name="q" placeholder="e.g. louver vent, box vent, Cobra" autocomplete="off">
+    </form>
+
+    <p id="search-status" class="helper-text" role="status"></p>
+    <ul id="results" class="result-list"></ul>
+  </main>
+
+  <footer class="site-footer">
+    <p>Search covers every recorded alias, not just the display name — a shared nickname (like "louver vent") can match more than one component, and every match is shown rather than guessed at.</p>
+  </footer>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('search');
+  </script>
+  <script type="module" src="/js/search-page.mjs"></script>
+</body>
+</html>
