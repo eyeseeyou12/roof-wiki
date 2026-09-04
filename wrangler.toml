@@ -9,4 +9,4 @@ pages_build_output_dir = "_site"
 [[d1_databases]]
 binding = "DB"
 database_name = "roof-wiki-search-miss"
-database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+database_id = "fdaca5d0-c3e4-463b-bfd0-5a936d73df56"
