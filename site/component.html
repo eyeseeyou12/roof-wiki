@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component — roof-wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="importmap">
+    { "imports": { "minisearch": "/lib/vendor/minisearch.js" } }
+  </script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <h1 id="component-title" class="component-header">Loading…</h1>
+    <div id="component-body"></div>
+  </main>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('component');
+  </script>
+  <script type="module" src="/js/component-page.mjs"></script>
+</body>
+</html>

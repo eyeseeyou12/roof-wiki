@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Category — roof-wiki</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="importmap">
+    { "imports": { "minisearch": "/lib/vendor/minisearch.js" } }
+  </script>
+</head>
+<body>
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <p class="subtitle"><a href="/browse.html">← All categories</a></p>
+    <h1 id="category-title">Loading…</h1>
+    <ul id="component-list" class="card-list"></ul>
+  </main>
+
+  <script type="module">
+    import { renderNav } from '/js/nav.mjs';
+    renderNav('browse');
+  </script>
+  <script type="module" src="/js/category-page.mjs"></script>
+</body>
+</html>
