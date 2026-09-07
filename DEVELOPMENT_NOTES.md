@@ -7,6 +7,7 @@ Based on the uploaded source snapshot of main at da22416. The updates are on bra
 - Home-page search and revised search instructions. Product cards and Xactimate reference sections on component pages. Load failures show a visible message.
 - Three initial manufacturer-sourced examples in content/catalog.json: GAF Cobra Rigid Vent 3, Lomanco 750-G, Broan-NuTone 634M. Each has specifications, a source URL, and a verification date. Product compatibility is not certified. No product photos were added in this pass.
 - Shared catalog validation in `npm run validate` and the build. Impossible calendar dates are rejected, with regression coverage for malformed entries, duplicate IDs, unknown components, source URLs, and specification types. No Xactimate references are populated: a verified source is still needed.
+- Consistent announced loading errors and Reload buttons on search, browse, category, component, and calculator pages. Calculator inputs stay disabled until required data loads; failed loading cannot run an empty calculation. Search retains edits during loading and cancels pending logging when cleared.
 - AGENTS.md and updated brand/deployment guidance in CLAUDE.md. Corrected package repository URL.
 
 ## Run
@@ -18,7 +19,7 @@ Use a Node version supporting `node:sqlite`; this branch was validated with Node
     node --test tests/*.test.mjs
     npm run serve
 
-The existing Cloudflare Pages configuration and calculator formulas are preserved. Existing calculator product records still require their separate specification review. Validation and the site build pass, and all 15 search/catalog tests pass. An integration check confirmed that both validation and the site build reject an impossible catalog verification date. The existing 27 draft entries and missing-field notices remain. Browser inspection confirmed the initial branch-preview home page and category list render; local browser access was blocked and screenshot capture timed out, so full visual/mobile QA remains outstanding.
+The existing Cloudflare Pages configuration and calculator formulas are preserved. Existing calculator product records still require their separate specification review. Validation and the site build pass, and all 21 search/catalog/page-loading tests pass. An integration check confirmed that both validation and the site build reject an impossible catalog verification date. The existing 27 draft entries and missing-field notices remain. Browser inspection confirmed the branch-preview home page and category list render, and the existing calculator returns 1,200 sq ft from a 1,300 sq ft 5/12 roof segment with 1,152 sq in total NFA at its baseline ratio; local browser access was blocked and screenshot capture timed out, so full visual/mobile QA remains outstanding.
 
 ## Next inputs and work
 Supply Xactimate screenshots or exports with category, selector, description, unit, and price-list identity; omit customer information. Expand the manufacturer catalog, add appropriately sourced product photos, and review the 27 draft entries. Review PR #2 and complete visual/mobile QA before considering a merge. Do not merge or deploy to production without an explicit request.

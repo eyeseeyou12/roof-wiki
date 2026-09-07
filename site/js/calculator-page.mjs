@@ -8,7 +8,11 @@ import {
   VentilationCalculatorError,
 } from '/lib/ventilation-calculator.mjs';
 import { loadComponents, loadProducts } from './data.mjs';
-import { el, escapeHtml, componentHref } from './render.mjs';
+import { el, escapeHtml, componentHref, loadError } from './render.mjs';
+
+const controlsEl = document.getElementById('calculator-controls');
+const statusEl = document.getElementById('calculator-status');
+let ready = false;
 
 const sectionsContainer = document.getElementById('sections-container');
 const addSectionBtn = document.getElementById('add-section');
@@ -166,6 +170,9 @@ async function init() {
   }
 
   addSection();
+  ready = true;
+  controlsEl.disabled = false;
+  statusEl.hidden = true;
 }
 
 function readSection(sectionBlock) {
@@ -198,6 +205,7 @@ function parseFloatOrNull(value) {
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  if (!ready) return;
   errorEl.textContent = '';
   errorEl.hidden = true;
   resultsEl.innerHTML = '';
@@ -329,4 +337,7 @@ function cfmNote() {
   });
 }
 
-init();
+init().catch(() => {
+  statusEl.hidden = true;
+  resultsEl.replaceChildren(loadError('The calculator could not load. Check your connection and try again.'));
+});

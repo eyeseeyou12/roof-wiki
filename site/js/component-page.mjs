@@ -1,6 +1,6 @@
 import { getComponent } from '/lib/query.mjs';
 import { loadComponents } from './data.mjs';
-import { el, escapeHtml, componentHref, categoryHref } from './render.mjs';
+import { el, escapeHtml, componentHref, categoryHref, loadError } from './render.mjs';
 
 const DIALECT_LABELS = {
   field: 'Field',
@@ -192,4 +192,7 @@ function renderCategories(component) {
   bodyEl.appendChild(block);
 }
 
-init().catch(() => { bodyEl.replaceChildren(el('p', { class: 'notice', text: 'Could not load this component. Please reload the page.' })); });
+init().catch(() => {
+  titleEl.textContent = 'Component unavailable';
+  bodyEl.replaceChildren(loadError('This component could not load. Check your connection and try again.'));
+});
