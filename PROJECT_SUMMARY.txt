@@ -2,6 +2,11 @@ roof-wiki — project summary
 ============================
 Written 2026-09-07
 
+HISTORICAL SNAPSHOT: this describes main at da22416 before PR #2.
+For current branch behavior and verification, see DEVELOPMENT_NOTES.md.
+Brands, models, and sourced product specifications are now allowed;
+AGENTS.md and CLAUDE.md contain the current development guidance.
+
 WHAT THIS APP IS FOR
 ---------------------
 roof-wiki is a public web reference for identifying roof components,

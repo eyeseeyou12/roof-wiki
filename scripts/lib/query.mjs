@@ -7,7 +7,11 @@ import MiniSearch from 'minisearch';
 
 const STOP_WORDS = new Set('a an the is it its this that what where on in at of for to with and or my i have need looking like looks roof roofing'.split(' '));
 function tokens(text) {
-  return normalizeQuery(text).split(' ').filter(t => t && !STOP_WORDS.has(t));
+  // Keep model suffixes attached: 750-G, 750 G, and 750G share one token.
+  // A different suffix must not match an unrelated word in the description.
+  return normalizeQuery(text)
+    .replace(/\b(\d+)\s+([a-z])\b/g, '$1$2')
+    .split(' ').filter(term => term && !STOP_WORDS.has(term));
 }
 
 export function createSearchIndex(searchIndexRows) {

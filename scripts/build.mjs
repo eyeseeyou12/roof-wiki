@@ -6,6 +6,7 @@
 // database itself is never shipped or persisted between builds — it
 // exists only to get from seed files to correct, constraint-checked
 // JSON in one pass.
+import { validateCatalog } from './lib/catalog.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -223,26 +224,6 @@ function exportJson(db) {
   return { components: componentsOut, categories: categoriesOut, searchIndex };
 }
 
-function validateCatalog(catalog, slugs) {
-  const ids = new Set();
-  for (const kind of ['products', 'xactimate']) {
-    if (!Array.isArray(catalog[kind])) throw new Error(`catalog.${kind} must be an array`);
-    for (const item of catalog[kind]) {
-      const required = kind === 'products'
-        ? ['id', 'component', 'brand', 'model', 'description', 'sourceUrl', 'verifiedOn']
-        : ['id', 'component', 'category', 'selector', 'description', 'unit', 'priceList', 'source', 'verifiedOn'];
-      for (const field of required) if (typeof item[field] !== 'string' || !item[field].trim()) throw new Error(`catalog ${kind}: missing ${field}`);
-      if (ids.has(item.id)) throw new Error(`duplicate catalog id: ${item.id}`);
-      ids.add(item.id);
-      if (!slugs.has(item.component)) throw new Error(`unknown catalog component: ${item.component}`);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(item.verifiedOn) || !Number.isFinite(Date.parse(item.verifiedOn))) throw new Error('invalid verification date');
-      if (kind === 'products') {
-        if (new URL(item.sourceUrl).protocol !== 'https:') throw new Error('product sources must use HTTPS');
-        if (!item.specs || Array.isArray(item.specs) || typeof item.specs !== 'object' || Object.values(item.specs).some(v => typeof v !== 'string')) throw new Error('product specs must be text key/value pairs');
-      }
-    }
-  }
-}
 
 function main() {
   const records = loadSeeds();

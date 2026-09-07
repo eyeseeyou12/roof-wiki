@@ -27,3 +27,13 @@ test('catalog publishes three sourced examples and no invented Xactimate mapping
   assert.ok(products.every(p => p.sourceUrl.startsWith('https://') && p.verifiedOn));
   assert.ok(Object.values(components).every(c => c.xactimate.length === 0));
 });
+
+test('model punctuation and spacing do not hide product matches', () => {
+  for (const q of ['750-G', '750G', 'Lomanco 750 G']) {
+    assert.equal(results(q)[0], 'static-roof-vent');
+  }
+  assert.equal(results('Broan 634 M')[0], 'bath-exhaust-roof-vent');
+  for (const q of ['Lomanco 750X', 'Lomanco 750A', 'Lomanco 750-A']) {
+    assert.deepEqual(results(q), []);
+  }
+});

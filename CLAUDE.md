@@ -10,10 +10,10 @@ This repo was split out from a personal monorepo that also held an unrelated leg
 
 ## Commands
 
-- `npm run validate` — parse and validate every seed file in `content/components/*.md`. Reports (does not just error on) missing required fields, orphaned links, cross-component alias collisions, and entries still marked draft. Exits non-zero only on hard errors (malformed YAML, bad enum values, unparseable alias/link syntax).
+- `npm run validate` — parse and validate every seed file in `content/components/*.md`. Reports (does not just error on) missing required fields, orphaned links, cross-component alias collisions, and entries still marked draft. Also validates `content/catalog.json` and its component references when run without a custom seed directory. Exits non-zero on hard seed errors or an invalid catalog.
 - `npm run build` — the full pipeline: loads `content/categories.yml` and `content/components/*.md` against `db/schema.sql` in an in-memory SQLite database (via `node:sqlite`, no native dependency), then exports `dist/data/{components,categories,search-index,products}.json`. Run `npm run validate` first if this fails — build aborts loudly on the same errors validate reports, plus unknown category/component/product references.
 - `npm run build:site` — runs `build`, then assembles `_site/` (the Cloudflare Pages output dir) from the hand-authored static UI in `site/`, the JSON `build` just produced, and the two isomorphic lib modules (vendoring a plain ESM build of their one dependency, minisearch) so the browser can import them directly.
-- `npm run serve` — a small dependency-free static file server for `_site/`, for local testing. No other dev server, test suite, or linter exists yet.
+- `npm run serve` — a small dependency-free static file server for `_site/`, for local testing. Run `node --test tests/*.test.mjs` after building for the search and catalog regression suite. No other dev server or linter is configured.
 
 ## Architecture
 
