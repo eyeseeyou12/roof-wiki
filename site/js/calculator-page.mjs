@@ -7,6 +7,7 @@ import {
   CFM_SIZED_COMPONENTS,
   VentilationCalculatorError,
 } from '/lib/ventilation-calculator.mjs';
+import { initMeasurementUpload } from './measurement-upload.mjs';
 import { loadComponents, loadProducts } from './data.mjs';
 import { el, escapeHtml, componentHref, loadError } from './render.mjs';
 
@@ -94,15 +95,15 @@ function segmentRowTemplate() {
     <div class="segment-row">
       <div>
         <label>Roof area (sq ft)</label>
-        <input type="number" class="seg-area" min="0" step="1" aria-label="Roof segment area, sq ft" placeholder="e.g. 1200">
+        <input type="number" class="seg-area" min="0" step="any" aria-label="Roof segment area, sq ft" placeholder="e.g. 1200">
       </div>
       <div>
         <label>Pitch rise</label>
-        <input type="number" class="seg-rise" min="0" step="0.5" aria-label="Pitch rise" placeholder="e.g. 5" value="5">
+        <input type="number" class="seg-rise" min="0" step="any" aria-label="Pitch rise" placeholder="e.g. 5" value="5">
       </div>
       <div>
         <label>Pitch run</label>
-        <input type="number" class="seg-run" min="1" step="1" aria-label="Pitch run" placeholder="12" value="12">
+        <input type="number" class="seg-run" min="0.01" step="any" aria-label="Pitch run" placeholder="12" value="12">
       </div>
       <button type="button" class="remove-row" aria-label="Remove this segment">✕</button>
     </div>
@@ -118,6 +119,7 @@ function addSection() {
   sectionsContainer.appendChild(block);
   addSegmentRow(block);
   updateRemoveSegmentState(block);
+  return block;
 }
 
 function addSegmentRow(sectionBlock) {
@@ -173,6 +175,33 @@ async function init() {
   ready = true;
   controlsEl.disabled = false;
   statusEl.hidden = true;
+  initMeasurementUpload(applyMeasurementSections);
+}
+
+function applyMeasurementSections(sections, mode) {
+  if (!ready) throw new Error('Wait for the calculator to finish loading.');
+  const blocks = [...sectionsContainer.querySelectorAll('.section-block')];
+  const first = blocks[0];
+  const untouched = blocks.length === 1 && first.querySelector('.mode-select').value === 'roof'
+    && first.querySelectorAll('.segment-row').length === 1
+    && ['.section-label', '.seg-area', '.eave-length', '.overhang-depth', '.direct-sqft'].every(selector => !first.querySelector(selector).value);
+  if (mode === 'replace' || untouched) sectionsContainer.replaceChildren();
+  for (const section of sections) {
+    const block = addSection();
+    block.querySelector('.section-label').value = section.label;
+    const container = block.querySelector('.segments-container');
+    container.replaceChildren();
+    for (const segment of section.segments) {
+      addSegmentRow(block);
+      const row = container.lastElementChild;
+      row.querySelector('.seg-area').value = segment.roofAreaSqFt;
+      row.querySelector('.seg-rise').value = segment.pitchRise;
+      row.querySelector('.seg-run').value = segment.pitchRun;
+    }
+    updateRemoveSegmentState(block);
+  }
+  resultsEl.replaceChildren();
+  errorEl.hidden = true;
 }
 
 function readSection(sectionBlock) {

@@ -17,6 +17,28 @@
       This is a starting point to verify, not a spec — go measure.
     </p>
 
+    <section class="measurement-upload" aria-labelledby="measurement-upload-title">
+      <h2 id="measurement-upload-title">Upload roof measurements</h2>
+      <p class="helper-text">Read a PDF report or CSV, review the measurements, then add them to the calculator. Files are read on this device and are not uploaded or saved.</p>
+      <fieldset id="measurement-upload-controls" disabled>
+        <label for="measurement-file">Measurement file (PDF or CSV, up to 20 MB)</label>
+        <input id="measurement-file" type="file" accept=".pdf,.csv,.esx,application/pdf,text/csv" aria-describedby="measurement-formats">
+        <p id="measurement-formats" class="helper-text">PDF: selectable-text pitch/area tables; scanned diagrams need manual entry. ESX: export a roof-measurement PDF or CSV first; native ESX decoding is not supported yet.</p>
+        <button id="measurement-cancel" type="button" class="ghost">Cancel import</button>
+      </fieldset>
+      <details class="csv-help">
+        <summary>CSV format and example</summary>
+        <p class="helper-text">Use one row per roof face or pitch group. Area columns can be area_sqft, area_squares, or area_m2. With a plain area column, add a unit column or choose units during review. Pitch can be 6/12 or separate pitch_rise and pitch_run columns. Attic is optional; set it to separate spaces that are not connected. Do not include waste.</p>
+        <pre>label,area_sqft,pitch,attic
+Main front,1300,5/12,Main attic
+Main rear,900,6/12,Main attic
+Garage,400,4/12,Garage attic</pre>
+      </details>
+      <p id="measurement-status" class="helper-text" role="status"></p>
+      <p id="measurement-error" class="notice" role="alert" hidden></p>
+      <div id="measurement-review"></div>
+    </section>
+
     <p id="calculator-status" class="helper-text" role="status">Loading calculator…</p>
     <form id="calculator-form">
       <fieldset id="calculator-controls" class="calculator-controls" aria-label="Calculator inputs" disabled>
