@@ -1,0 +1,47 @@
+{
+  "products": [
+    {
+      "id": "gaf-cobra-rigid-vent-3",
+      "component": "ridge-vent",
+      "brand": "GAF",
+      "model": "Cobra Rigid Vent 3",
+      "description": "Ridge exhaust vent for heat and moisture release.",
+      "specs": {
+        "Net free area": "18 sq. in. per linear foot",
+        "Sizing": "Hand-tear in 3-inch increments"
+      },
+      "sourceUrl": "https://www.gaf.com/en-us/roofing-materials/residential-roofing-materials/attic-vents-other-ventilation/cobra-rigid-vent-3-premium-exhaust-vent-for-roof-ridge",
+      "verifiedOn": "2026-09-07"
+    },
+    {
+      "id": "lomanco-750-g",
+      "component": "static-roof-vent",
+      "brand": "Lomanco",
+      "model": "750-G",
+      "description": "Galvanized metal static roof vent in the 700 series.",
+      "specs": {
+        "Net free area": "50 sq. in. per vent",
+        "Material": "Galvanized metal"
+      },
+      "sourceUrl": "https://www.lomanco.com/lmc-gallery/700-series/",
+      "verifiedOn": "2026-09-07"
+    },
+    {
+      "id": "broan-634m",
+      "component": "bath-exhaust-roof-vent",
+      "brand": "Broan-NuTone",
+      "model": "634M",
+      "description": "Steel roof cap for a 6-inch round duct. Includes a backdraft damper and bird screen.",
+      "specs": {
+        "Duct connection": "6-inch round",
+        "Material": "Steel",
+        "Color": "Black",
+        "Damper": "Built-in backdraft damper",
+        "Screen": "Bird screen"
+      },
+      "sourceUrl": "https://www.broan-nutone.com/en-us/accessory/634m",
+      "verifiedOn": "2026-09-07"
+    }
+  ],
+  "xactimate": []
+}

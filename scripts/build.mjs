@@ -39,10 +39,7 @@ function loadCategories() {
   return parsed.categories || [];
 }
 
-// Calculator-only product/brand data (see content/products.yml) —
-// intentionally not loaded into db/schema.sql or exposed through the
-// component/alias/category tables. It never appears on a wiki page,
-// only in the ventilation calculator's optional brand filter.
+// Retained calculator product contract; sourced wiki examples live in catalog.json.
 function loadProducts(componentSlugs) {
   const text = readFileSync(join(root, 'content', 'products.yml'), 'utf8');
   const parsed = loadYaml(text);
@@ -226,12 +223,49 @@ function exportJson(db) {
   return { components: componentsOut, categories: categoriesOut, searchIndex };
 }
 
+function validateCatalog(catalog, slugs) {
+  const ids = new Set();
+  for (const kind of ['products', 'xactimate']) {
+    if (!Array.isArray(catalog[kind])) throw new Error(`catalog.${kind} must be an array`);
+    for (const item of catalog[kind]) {
+      const required = kind === 'products'
+        ? ['id', 'component', 'brand', 'model', 'description', 'sourceUrl', 'verifiedOn']
+        : ['id', 'component', 'category', 'selector', 'description', 'unit', 'priceList', 'source', 'verifiedOn'];
+      for (const field of required) if (typeof item[field] !== 'string' || !item[field].trim()) throw new Error(`catalog ${kind}: missing ${field}`);
+      if (ids.has(item.id)) throw new Error(`duplicate catalog id: ${item.id}`);
+      ids.add(item.id);
+      if (!slugs.has(item.component)) throw new Error(`unknown catalog component: ${item.component}`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(item.verifiedOn) || !Number.isFinite(Date.parse(item.verifiedOn))) throw new Error('invalid verification date');
+      if (kind === 'products') {
+        if (new URL(item.sourceUrl).protocol !== 'https:') throw new Error('product sources must use HTTPS');
+        if (!item.specs || Array.isArray(item.specs) || typeof item.specs !== 'object' || Object.values(item.specs).some(v => typeof v !== 'string')) throw new Error('product specs must be text key/value pairs');
+      }
+    }
+  }
+}
+
 function main() {
   const records = loadSeeds();
   const categories = loadCategories();
   const products = loadProducts(new Set(records.map((r) => r.slug)));
   const { db } = buildDatabase(records, categories);
   const { components, categories: categoriesOut, searchIndex } = exportJson(db);
+
+  const catalog = JSON.parse(readFileSync(join(root, 'content', 'catalog.json'), 'utf8'));
+  validateCatalog(catalog, new Set(Object.keys(components)));
+  for (const c of Object.values(components)) {
+    c.products = catalog.products.filter(p => p.component === c.slug);
+    c.xactimate = catalog.xactimate.filter(x => x.component === c.slug);
+  }
+  searchIndex.length = 0;
+  for (const c of Object.values(components)) {
+    searchIndex.push({
+      id: c.slug, componentSlug: c.slug, text: c.displayName,
+      aliases: c.aliases.map(a => a.name).join(' '),
+      description: [c.description, c.function, c.measurementNotes, c.disambiguation].filter(Boolean).join(' '),
+      products: c.products.map(p => [p.brand, p.model, p.description, ...Object.entries(p.specs).flat()].join(' ')).join(' '),
+    });
+  }
 
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'components.json'), JSON.stringify(components, null, 2));

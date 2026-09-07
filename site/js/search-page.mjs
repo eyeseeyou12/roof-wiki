@@ -61,7 +61,7 @@ function renderResults(results, queryText) {
       el('li', {
         class: 'empty-state',
         html:
-          'Nothing matched that name. Try a shorter or more general word — search matches full aliases, not partial ones split across multiple words.',
+          'Try fewer details, a nickname, the component’s purpose, or a brand and model. Descriptions are still being expanded.',
       })
     );
     return;
@@ -100,4 +100,4 @@ input.addEventListener('input', () => {
   runSearch(input.value);
 });
 
-init();
+init().catch(() => { statusEl.textContent = 'Search could not load. Please reload the page.'; });

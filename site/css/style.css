@@ -488,3 +488,16 @@ footer.site-footer {
   color: var(--text-muted);
   font-size: 0.82rem;
 }
+
+/* Reference workspace: retain the established palette and navigation. */
+.main-search { margin: 1.5rem 0; }
+.search-row { display: flex; gap: .5rem; }
+.search-row input { min-width: 0; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
+.product-card { padding: 1.25rem; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); background: var(--surface); overflow-wrap: anywhere; }
+.product-card h3 { margin: .15rem 0 .65rem; }
+.spec-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: .5rem 1rem; }
+.spec-list dt { color: var(--text-muted); }
+.spec-list dd { margin: 0; }
+label, .helper-text, .match-note, .link-type-label { font-size: .875rem; }
+.product-card .helper-text { margin-top: .75rem; }
