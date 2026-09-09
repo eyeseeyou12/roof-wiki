@@ -1,6 +1,6 @@
 import { getComponent } from '/lib/query.mjs';
 import { loadComponents } from './data.mjs';
-import { el, escapeHtml, componentHref, categoryHref } from './render.mjs';
+import { el, escapeHtml, componentHref, categoryHref, loadError } from './render.mjs';
 
 const DIALECT_LABELS = {
   field: 'Field',
@@ -81,6 +81,7 @@ async function init() {
     );
   }
 
+  renderReferences(component);
   renderAliases(component);
   renderLinks(component);
   renderCategories(component);
@@ -93,6 +94,42 @@ async function init() {
       ])
     );
   }
+}
+
+function renderReferences(component) {
+  if (component.entryType === 'rule') return;
+  const block = el('section', { class: 'field-block', id: 'products' }, [el('h2', { text: 'Products & specifications' })]);
+  const products = component.products || [];
+  if (!products.length) block.appendChild(el('p', { class: 'helper-text', text: 'No manufacturer-sourced products added for this component yet.' }));
+  else {
+    block.appendChild(el('p', { class: 'helper-text', text: 'Product examples. Check the manufacturer’s installation instructions and your measurements before selecting a replacement.' }));
+    const grid = el('div', { class: 'product-grid' });
+    for (const p of products) {
+      const card = el('article', { class: 'product-card' }, [el('p', { class: 'helper-text', text: p.brand }), el('h3', { text: p.model }), el('p', { text: p.description })]);
+      const dl = el('dl', { class: 'spec-list' });
+      for (const [label, value] of Object.entries(p.specs)) {
+        dl.appendChild(el('dt', { text: label })); dl.appendChild(el('dd', { text: value }));
+      }
+      card.appendChild(dl);
+      card.appendChild(el('a', { href: p.sourceUrl, target: '_blank', rel: 'noopener noreferrer', text: 'Manufacturer source ↗' }));
+      card.appendChild(el('p', { class: 'helper-text', text: `Specifications checked ${p.verifiedOn}` }));
+      grid.appendChild(card);
+    }
+    block.appendChild(grid);
+  }
+  bodyEl.appendChild(block);
+  const xblock = el('section', { class: 'field-block', id: 'xactimate' }, [el('h2', { text: 'Xactimate references' })]);
+  const refs = component.xactimate || [];
+  if (!refs.length) xblock.appendChild(el('p', { class: 'helper-text', text: 'No verified line item available yet. Confirm the category, selector, description, and unit in your current Xactimate price list.' }));
+  for (const x of refs) {
+    xblock.appendChild(el('article', { class: 'product-card' }, [
+      el('h3', { text: `${x.category} ${x.selector}` }), el('p', { text: x.description }),
+      el('p', { text: `Unit: ${x.unit} · Price list: ${x.priceList}` }),
+      x.notes ? el('p', { text: x.notes }) : null,
+      el('p', { class: 'helper-text', text: `Source: ${x.source} · Checked ${x.verifiedOn}` }),
+    ]));
+  }
+  bodyEl.appendChild(xblock);
 }
 
 function renderAliases(component) {
@@ -155,4 +192,7 @@ function renderCategories(component) {
   bodyEl.appendChild(block);
 }
 
-init();
+init().catch(() => {
+  titleEl.textContent = 'Component unavailable';
+  bodyEl.replaceChildren(loadError('This component could not load. Check your connection and try again.'));
+});

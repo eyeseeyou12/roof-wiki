@@ -1,55 +1,32 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ventilation calculator — roof-wiki</title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-  <header id="site-header" class="site-header"></header>
-
-  <main>
-    <h1>Attic ventilation calculator</h1>
-    <p class="subtitle">
-      Estimates required net free area from <a href="/component.html?slug=attic-ventilation-ratio">IRC R806.2</a>,
-      then translates it into quantities of generic vent types (or a specific brand's real products).
-      This is a starting point to verify, not a spec — go measure.
-    </p>
-
-    <form id="calculator-form">
-      <div id="sections-container"></div>
-
-      <button type="button" id="add-section" class="secondary">+ Add a separated attic section</button>
-
-      <fieldset>
-        <legend>Options</legend>
-        <div class="field-row">
-          <div>
-            <label for="exception-confirmed" style="display:inline;">
-              <input type="checkbox" id="exception-confirmed" style="width:auto;display:inline;vertical-align:middle;">
-              Use the 1/300 exception instead of the 1/150 baseline
-            </label>
-            <p class="helper-text">Only check this if you've confirmed the exception's conditions apply — see the <a href="/component.html?slug=attic-ventilation-ratio">ventilation ratio</a> entry for what those are and how they vary by code edition. Defaults to the conservative 1/150 baseline.</p>
-          </div>
-          <div>
-            <label for="brand-select">Show products for a specific brand</label>
-            <select id="brand-select"><option value="">Generic reference figures</option></select>
-          </div>
-        </div>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ventilation Planner — roof-wiki</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/planner.css"></head>
+<body class="planner"><header class="planner-nav"><a class="brand" href="/">roof-wiki</a><span>Ventilation Planner</span><nav><a href="/browse.html">Reference</a><a href="/search.html">Search</a></nav></header>
+<main><div class="planner-heading"><div><h1>Ventilation Planner</h1><p>Find approaches that fit this attic and check the intake that supports them.</p></div><div class="mode-switch" aria-label="Planning mode"><button type="button" id="plan-mode" aria-pressed="true">Plan a new system</button><button type="button" id="check-mode" aria-pressed="false">Check existing system</button></div></div>
+<p id="planner-status" role="status">Loading planner…</p><p id="planner-error" role="alert" hidden></p>
+<div id="start-panel"><h2>Start with your roof</h2><p>Upload a measurement report or enter the area yourself.</p><div class="start-actions"><button id="start-upload" disabled>Upload roof report <span>PDF or CSV measurements</span></button><button id="start-manual" disabled>Enter measurements <span>Roof area or known attic floor area</span></button></div></div>
+    <section id="upload-panel" hidden class="measurement-upload" aria-labelledby="measurement-upload-title">
+      <h2 id="measurement-upload-title">Upload roof measurements</h2>
+      <p class="helper-text">Read a PDF report or CSV, review the measurements, then add them to the calculator. Files are read on this device and are not uploaded or saved.</p>
+      <fieldset id="measurement-upload-controls" disabled>
+        <label for="measurement-file">Measurement file (PDF or CSV, up to 20 MB)</label>
+        <input id="measurement-file" type="file" accept=".pdf,.csv,.esx,application/pdf,text/csv" aria-describedby="measurement-formats">
+        <p id="measurement-formats" class="helper-text">PDF: selectable-text pitch/area tables; scanned diagrams need manual entry. ESX: export a roof-measurement PDF or CSV first; native ESX decoding is not supported yet.</p>
+        <button id="measurement-cancel" type="button" class="ghost">Cancel import</button>
       </fieldset>
+      <details class="csv-help">
+        <summary>CSV format and example</summary>
+        <p class="helper-text">Use one row per roof face or pitch group. Area columns can be area_sqft, area_squares, or area_m2. With a plain area column, add a unit column or choose units during review. Pitch can be 6/12 or separate pitch_rise and pitch_run columns. Attic is optional; set it to separate spaces that are not connected. Do not include waste.</p>
+        <pre>label,area_sqft,pitch,attic
+Main front,1300,5/12,Main attic
+Main rear,900,6/12,Main attic
+Garage,400,4/12,Garage attic</pre>
+      </details>
+      <p id="measurement-status" class="helper-text" role="status"></p>
+      <p id="measurement-error" class="notice" role="alert" hidden></p>
+      <div id="measurement-review"></div>
+    </section>
 
-      <button type="submit">Calculate</button>
-    </form>
 
-    <p id="calculator-error" class="notice" hidden></p>
-    <div id="results-container"></div>
-  </main>
-
-  <script type="module">
-    import { renderNav } from '/js/nav.mjs';
-    renderNav('calculator');
-  </script>
-  <script type="module" src="/js/calculator-page.mjs"></script>
-</body>
-</html>
+<div id="planner-workspace" class="planner-layout" hidden><aside><label for="attic-picker">Current attic</label><select id="attic-picker"></select><div id="roof-summary"></div><button type="button" class="text-button" id="edit-area">Edit measurements</button><button type="button" class="text-button" id="replace-report">Use a roof report</button><button type="button" class="text-button" id="add-attic">+ Add separate attic space</button><p class="small">Separate spaces are sized independently. No airflow is shared between them.</p><button type="button" class="text-button" id="remove-attic">Remove this attic</button></aside><div><div id="recommendation"></div><section id="inventory-panel"></section><details class="technical"><summary>How this was calculated</summary><div id="calculation-details"></div><p>Net free area (NFA) is the open ventilation area, not the outside size of a vent. Roof-based attic area is an estimate; verify overhangs and excluded areas.</p><p><a href="/calculator-advanced.html">Open the detailed calculator and legacy brand options</a></p><p>The default uses a 1:150 area basis and equal intake/exhaust sizing targets. Reduced-ratio eligibility depends on applicable code conditions; this tool does not determine local approval.</p><a href="/component.html?slug=attic-ventilation-ratio">Code basis and eligibility notes</a><label class="check-label"><input id="planner-exception" type="checkbox"> I have verified that the applicable 1:300 exception conditions are met.</label></details></div></div>
+<section id="measurement-editor" class="editor" hidden><h2 id="editor-title">What area do you know?</h2><form id="area-form"><label>Attic name<input id="area-name" value="Main attic" maxlength="100" required></label><label>Area type<select id="area-mode"><option value="roof">Sloped roof area</option><option value="direct">Known attic floor area</option></select></label><div id="simple-roof" class="field-row"><label>Roof area · sq ft<input id="roof-area" type="number" min="0.01" step="any"></label><label>Roof pitch<select id="roof-pitch"><option value="">Choose pitch</option><option value="0">0/12</option><option value="1">1/12</option><option value="2">2/12</option><option value="3">3/12</option><option value="4">4/12</option><option value="5">5/12</option><option value="6">6/12</option><option value="7">7/12</option><option value="8">8/12</option><option value="9">9/12</option><option value="10">10/12</option><option value="11">11/12</option><option value="12">12/12</option><option value="13">13/12</option><option value="14">14/12</option><option value="15">15/12</option><option value="16">16/12</option><option value="17">17/12</option><option value="18">18/12</option><option value="19">19/12</option><option value="20">20/12</option><option value="21">21/12</option><option value="22">22/12</option><option value="23">23/12</option><option value="24">24/12</option></select></label></div><label id="floor-field" hidden>Attic floor area · sq ft<input id="floor-area" type="number" min="0.01" step="any"></label><details id="segments-details"><summary>Multiple pitches or imported roof sections</summary><p class="small">Each area is pitch-corrected separately. Exclude patios and areas without attic below.</p><div id="segment-editor"></div><button type="button" id="segment-add">+ Add roof section</button><label class="check-label"><input id="use-segments" type="checkbox">Use these roof sections instead of the single area above</label></details><details id="overhang-details"><summary>Overhang correction</summary><div class="field-row"><label>Eave length · ft<input id="eave-length" type="number" min="0.01" step="any"></label><label>Overhang depth · ft<input id="overhang-depth" type="number" min="0" max="10" step="any"></label></div><p class="small">Optional approximation: subtract eave length × uniform overhang depth. Both values are needed.</p></details><div class="editor-actions"><button type="submit">Use measurements</button><button type="button" class="secondary" id="cancel-editor">Cancel</button></div></form></section>
+</main><script type="module" src="/js/planner-page.mjs"></script></body></html>

@@ -1,6 +1,6 @@
 import { listCategories } from '/lib/query.mjs';
 import { loadCategories } from './data.mjs';
-import { el, categoryHref } from './render.mjs';
+import { el, categoryHref, loadError } from './render.mjs';
 
 const listEl = document.getElementById('category-list');
 
@@ -24,4 +24,6 @@ async function init() {
   }
 }
 
-init();
+init().catch(() => {
+  listEl.replaceChildren(el('li', {}, [loadError('Categories could not load. Check your connection and try again.')]));
+});

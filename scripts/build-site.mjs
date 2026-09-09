@@ -32,11 +32,22 @@ function main() {
   cpSync(join(root, 'scripts', 'lib', 'query.mjs'), join(siteOut, 'lib', 'query.mjs'));
   cpSync(join(root, 'scripts', 'lib', 'ventilation-calculator.mjs'), join(siteOut, 'lib', 'ventilation-calculator.mjs'));
 
+  for (const name of ['measurement-import.mjs', 'measurement-file.mjs']) {
+    cpSync(join(root, 'scripts', 'lib', name), join(siteOut, 'lib', name));
+  }
+
   mkdirSync(join(siteOut, 'lib', 'vendor'), { recursive: true });
   cpSync(
     join(root, 'node_modules', 'minisearch', 'dist', 'es', 'index.js'),
     join(siteOut, 'lib', 'vendor', 'minisearch.js')
   );
+
+  // PDF parsing is loaded only when a PDF is selected. Serve the worker from
+  // the same pinned package and origin; no document is sent to a third party.
+  for (const name of ['pdf.mjs', 'pdf.worker.mjs']) {
+    cpSync(join(root, 'node_modules', 'pdfjs-dist', 'build', name), join(siteOut, 'lib', 'vendor', name));
+  }
+  cpSync(join(root, 'node_modules', 'pdfjs-dist', 'LICENSE'), join(siteOut, 'lib', 'vendor', 'PDFJS-LICENSE'));
 
   console.log(`Assembled static site -> ${siteOut}`);
 }

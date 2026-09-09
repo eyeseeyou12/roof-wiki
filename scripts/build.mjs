@@ -6,6 +6,7 @@
 // database itself is never shipped or persisted between builds — it
 // exists only to get from seed files to correct, constraint-checked
 // JSON in one pass.
+import { validateCatalog } from './lib/catalog.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -39,10 +40,7 @@ function loadCategories() {
   return parsed.categories || [];
 }
 
-// Calculator-only product/brand data (see content/products.yml) —
-// intentionally not loaded into db/schema.sql or exposed through the
-// component/alias/category tables. It never appears on a wiki page,
-// only in the ventilation calculator's optional brand filter.
+// Retained calculator product contract; sourced wiki examples live in catalog.json.
 function loadProducts(componentSlugs) {
   const text = readFileSync(join(root, 'content', 'products.yml'), 'utf8');
   const parsed = loadYaml(text);
@@ -226,12 +224,29 @@ function exportJson(db) {
   return { components: componentsOut, categories: categoriesOut, searchIndex };
 }
 
+
 function main() {
   const records = loadSeeds();
   const categories = loadCategories();
   const products = loadProducts(new Set(records.map((r) => r.slug)));
   const { db } = buildDatabase(records, categories);
   const { components, categories: categoriesOut, searchIndex } = exportJson(db);
+
+  const catalog = JSON.parse(readFileSync(join(root, 'content', 'catalog.json'), 'utf8'));
+  validateCatalog(catalog, new Set(Object.keys(components)));
+  for (const c of Object.values(components)) {
+    c.products = catalog.products.filter(p => p.component === c.slug);
+    c.xactimate = catalog.xactimate.filter(x => x.component === c.slug);
+  }
+  searchIndex.length = 0;
+  for (const c of Object.values(components)) {
+    searchIndex.push({
+      id: c.slug, componentSlug: c.slug, text: c.displayName,
+      aliases: c.aliases.map(a => a.name).join(' '),
+      description: [c.description, c.function, c.measurementNotes, c.disambiguation].filter(Boolean).join(' '),
+      products: c.products.map(p => [p.brand, p.model, p.description, ...Object.entries(p.specs).flat()].join(' ')).join(' '),
+    });
+  }
 
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, 'components.json'), JSON.stringify(components, null, 2));

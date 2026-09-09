@@ -1,0 +1,111 @@
+roof-wiki — project summary
+============================
+Written 2026-09-07
+
+HISTORICAL SNAPSHOT: this describes main at da22416 before PR #2.
+For current branch behavior and verification, see DEVELOPMENT_NOTES.md.
+Brands, models, and sourced product specifications are now allowed;
+AGENTS.md and CLAUDE.md contain the current development guidance.
+
+WHAT THIS APP IS FOR
+---------------------
+roof-wiki is a public web reference for identifying roof components,
+accessories, and penetrations — scoped specifically to penetrations,
+vents, and intake (no flashings, valley metal, or edge metal).
+
+It serves three moments:
+  1. Looking at something on a roof and not knowing what it is.
+  2. Needing to replace something and not knowing what to order.
+  3. Hearing a name or term and not knowing what it means.
+
+It is explicitly NOT an estimating tool. The wiki itself never names a
+brand or part number — only what class of thing can replace something,
+and what to go measure. (The separate ventilation calculator is the one
+place brand-specific products show up, and only there.)
+
+Included in scope:
+  - A searchable reference of 27 components/rules (penetrations, vents,
+    intake), each with what it is, what it does, replacement notes,
+    what to measure, and common failure modes — plus every alias/
+    nickname/manufacturer term it's known by.
+  - An attic ventilation calculator grounded in IRC R806.2: works out
+    required net free area from a roof report or a direct measurement,
+    then translates that into a quantity of generic vent types or a
+    specific brand's real products.
+
+Content discipline: every fact in the wiki is converted or written from
+real sources only — nothing is invented to fill a blank field. That's
+why every current entry is still missing a short "summary" (the source
+research never wrote one) and why every entry is still marked "draft" /
+unreviewed — that's an honest, deliberate state, not a bug.
+
+
+WHAT WE'VE DONE SO FAR
+------------------------
+1. Content pipeline
+   - Defined the seed-file format (content/components/*.md: YAML
+     frontmatter + Markdown prose sections) and the content database
+     schema (db/schema.sql).
+   - Wrote scripts/validate.mjs and scripts/build.mjs: seed files ->
+     in-memory SQLite -> dist/data/*.json (components, categories,
+     search index, calculator products).
+   - Converted three batches of real inventory research (penetrations;
+     vents and skylights; intake) into 27 seed files.
+
+2. Query layer (scripts/lib/query.mjs)
+   - MiniSearch-backed name/alias search, category browsing, single-
+     component fetch — written with no Node-only APIs so the same code
+     runs unmodified in the browser.
+   - Designed (and later provisioned) search_miss logging: every search
+     query gets logged to a Cloudflare D1 database via a Pages Function,
+     so search quality is something to improve from real data.
+
+3. Ventilation calculator (scripts/lib/ventilation-calculator.mjs)
+   - IRC R806.2-grounded NFA sizing (1/150 baseline, 1/300 exception).
+   - Three tiers of increasing precision for attic square footage: roof
+     segments only (pitch-corrected), roof segments + eave/overhang
+     correction, or direct manual entry.
+   - Handles separated attic spaces (e.g. a garage attic behind a
+     firewall) as independent calculations, never summed together.
+   - Translates required NFA into generic vent-type quantities, or into
+     specific brand products when brand data is supplied.
+
+4. Minimal UI (site/) — plain HTML/CSS/JS, no framework or SSG
+   - Home page: three doors (search a name, browse categories, and a
+     disabled "identify by photo" placeholder — intentionally unbuilt).
+   - Search page, browse + category pages, and a component detail page
+     (summary-first, falling back to description since summary is
+     blank everywhere right now).
+   - The ventilation calculator wired into a real form: roof segments,
+     separated sections, the 1/300 exception checkbox, and an optional
+     brand filter.
+   - Verified end-to-end with a headless browser (search, browse,
+     component pages, and every calculator path).
+
+5. Split into its own repository
+   - roof-wiki used to live inside a personal monorepo alongside an
+     unrelated legacy project ("Notes on the Wall", a shared message
+     board). Split it out into its own independent, public repo:
+     https://github.com/eyeseeyou12/roof-wiki
+   - Only roof-wiki's own commit history came along (filtered down to
+     the files that were always roof-wiki's) — nothing from the legacy
+     project is in this repo.
+
+6. Shipped it
+   - Provisioned the production Cloudflare D1 database for search_miss
+     logging and ran its migration.
+   - Created the Cloudflare Pages project, connected it to GitHub for
+     auto-deploy on every push to main (build command: npm run
+     build:site, output dir: _site).
+   - Merged the minimal-UI pull request. The site is live and
+     auto-deploying at: https://roof-wiki.pages.dev
+
+
+WHAT'S STILL OPEN
+-------------------
+  - "Identify by photo" — intentionally not designed for yet, no hooks.
+  - Content review: every component is still status=draft, and most are
+    confidence=medium/thin, meaning "don't trust without review," not
+    "don't ship." Writing missing summaries and reviewing entries is
+    ongoing work, separate from shipping the site.
+  - No custom domain yet — still on the default *.pages.dev address.

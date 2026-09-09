@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { validateCatalog } from './lib/catalog.mjs';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -35,10 +36,23 @@ function hasLinkBetween(bySlug, a, b) {
 }
 
 function main() {
-  const { entries, hardErrors } = loadAll(contentDir);
+  let { entries, hardErrors } = loadAll(contentDir);
   const bySlug = new Map(entries.map((e) => [e.slug, e]));
 
   console.log(`\nLoaded ${entries.length} entries from ${contentDir}\n`);
+
+  // The default command checks the catalog against the repository seeds too.
+  // An explicit seed directory remains useful for standalone inventory checks.
+  if (!process.argv[2]) {
+    try {
+      const catalog = JSON.parse(readFileSync(resolve(__dirname, '..', 'content/catalog.json'), 'utf8'));
+      validateCatalog(catalog, new Set(bySlug.keys()));
+      console.log('Catalog structure and component references valid.');
+    } catch (error) {
+      console.error(`ERROR  catalog: ${error.message}`);
+      hardErrors++;
+    }
+  }
 
   // Missing fields. Every entry needs the basics; replacement/measurement
   // notes are only required for actual components — a rule like "don't
