@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {shortlist,assessInventory} from '../site/js/planner-model.mjs';
+import {plannerProducts,solarProduct} from '../site/js/planner-products.mjs';
+test('ridge candidates reflect actual length constraints without excluding alternatives',()=>{const r=shortlist(plannerProducts,858.7,52);assert.equal(r.find(p=>p.id==='rigid3').quantity,48);assert.equal(r.find(p=>p.id==='runner').fits,false);assert.equal(r.find(p=>p.id==='750g').fits,true);});
+test('unknown ridge is explicitly conditional',()=>assert.match(shortlist(plannerProducts,860)[0].status,/verification/));
+test('rounding never undersizes a target slightly above whole product capacity',()=>assert.equal(shortlist(plannerProducts,864.01,60)[0].quantity,49));
+test('known no intake differs from unknown intake',()=>{assert.equal(assessInventory([{type:'none'}],864).capacity,0);assert.equal(assessInventory([{type:'unknown'}],864).capacity,null);});
+test('actual inventory returns shortage and does not invent capacity',()=>{assert.equal(assessInventory([{type:'individual',quantity:12,rating:50}],864).shortfall,264);assert.equal(assessInventory([{type:'individual',quantity:12,rating:NaN}],864).capacity,null);});
+test('solar and powered airflow are never added to passive NFA',()=>{assert.equal(assessInventory([{type:'solar',quantity:2,rating:750}],864).capacity,null);});
+test('mixed exhaust remains unassessed',()=>assert.equal(assessInventory([{type:'ridge',quantity:30,rating:18},{type:'static',quantity:6,rating:50}],864,{exhaust:true}).capacity,null));
+test('conflicting none and installed entries require correction',()=>assert.equal(assessInventory([{type:'none'},{type:'individual',quantity:20,rating:50}],864).capacity,null));
+test('solar data preserves the published exceptional five-fan row',()=>assert.deepEqual(solarProduct.sizingRows.at(-1),{area:3200,count:5,intake:1800}));
+test('independent attic inventories cannot borrow capacity',()=>{const a=assessInventory([{type:'individual',quantity:20,rating:50}],500);const b=assessInventory([{type:'none'}],300);assert.equal(a.shortfall,0);assert.equal(b.shortfall,300);});

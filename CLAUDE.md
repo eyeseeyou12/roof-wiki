@@ -46,3 +46,7 @@ Photo-ID identification: no hooks, not designed for. Production search logging i
 ## Measurement upload
 
 The calculator can read PDF/CSV measurements in the browser, review them, and append or replace attic inputs. `scripts/lib/measurement-import.mjs` contains pure parsers and reviewed-row validation; `scripts/lib/measurement-file.mjs` reads files and lazy-loads PDF.js. `site/js/measurement-upload.mjs` owns review UI and passes validated sections to the calculator. No report content is uploaded or logged. PDF.js and its matching worker are pinned and copied by build:site. Native ESX decoding and scanned-PDF OCR are not implemented; show an explicit PDF/CSV/manual-entry fallback. Never guess a missing pitch or apply a predominant pitch to a mixed-pitch total. Keep review and attic exclusions required.
+
+## Recommendation-first planner
+
+`site/calculator.html` now uses `planner-page.mjs`, `planner-model.mjs`, `planner-products.mjs`, and `planner.css`. The previous calculator remains at `calculator-advanced.html` using the original controller and formula modules. See `docs/planner-redesign.md` for delivered behavior and limitations, and `docs/ventilation-interface-spec.md` for the user's full design specification. Do not treat mock quantities in that specification as real product data. The planner has a small explicit manufacturer-sourced catalog and avoids unverified generic capacities. Source record expansion must preserve units, exact models, verification dates and limitations. Solar sizing rows are intentionally not interpolated.
