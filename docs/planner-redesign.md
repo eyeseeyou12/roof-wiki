@@ -2,6 +2,10 @@
 
 The existing Cloudflare Pages project now builds a password-protected review deployment from the feature branch. Production/main is not changed. The calculator stays at `/calculator` and retains manual floor or pitched-roof entry, independently sized attic spaces, optional overhang correction, and reviewed PDF/CSV import.
 
+## Simplified interface
+
+The main flow is one column: attic area, exhaust product, then intake quantity. A fitting passive candidate is selected as a starting point; it does not automatically add intake or earn a pass. A single grouped dropdown exposes the full exhaust catalog. Existing-intake credit, separate-attic management, product specifications and code settings are collapsed until needed. Existing-system mode always exposes installed inventory and keeps proposed additions excluded. Ridge length remains editable after a short ridge triggers a static-vent candidate. Eleven controller interaction scenarios verify the simplified flow.
+
 ## Product records
 
 `content/ventilation-products.json` is the structured calculation catalog. Build validates the record types, exact model IDs, component references, units, dates, source URLs and positive numeric specifications, then exports `/data/ventilation-products.json`. The controller loads that file; it has no hardcoded product ratings. Corresponding sourced records in `content/catalog.json` flow through the existing SQLite content build into component details and search. Update both records when a manufacturer's specification changes; catalog tests ensure the calculation products remain represented in the wiki.
