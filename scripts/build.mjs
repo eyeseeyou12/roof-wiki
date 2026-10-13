@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { validateVentilationCatalog } from './lib/ventilation-catalog.mjs';
 // Reads content/categories.yml and content/components/*.md, loads them
 // against db/schema.sql in an in-memory SQLite database (the same
 // schema the validator's rules are written against), then exports the
@@ -234,6 +235,8 @@ function main() {
 
   const catalog = JSON.parse(readFileSync(join(root, 'content', 'catalog.json'), 'utf8'));
   validateCatalog(catalog, new Set(Object.keys(components)));
+  const ventilationCatalog = JSON.parse(readFileSync(join(root, 'content/ventilation-products.json'), 'utf8'));
+  validateVentilationCatalog(ventilationCatalog, new Set(Object.keys(components)));
   for (const c of Object.values(components)) {
     c.products = catalog.products.filter(p => p.component === c.slug);
     c.xactimate = catalog.xactimate.filter(x => x.component === c.slug);
@@ -253,6 +256,7 @@ function main() {
   writeFileSync(join(outDir, 'categories.json'), JSON.stringify(categoriesOut, null, 2));
   writeFileSync(join(outDir, 'search-index.json'), JSON.stringify(searchIndex, null, 2));
   writeFileSync(join(outDir, 'products.json'), JSON.stringify(products, null, 2));
+  writeFileSync(join(outDir, 'ventilation-products.json'), JSON.stringify(ventilationCatalog, null, 2));
 
   console.log(`Built ${Object.keys(components).length} components, ${categoriesOut.length} categories, ${searchIndex.length} search index entries, ${products.length} calculator products.`);
   console.log(`-> ${outDir}`);

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { validateVentilationCatalog } from './lib/ventilation-catalog.mjs';
 import { validateCatalog } from './lib/catalog.mjs';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
@@ -47,6 +48,7 @@ function main() {
     try {
       const catalog = JSON.parse(readFileSync(resolve(__dirname, '..', 'content/catalog.json'), 'utf8'));
       validateCatalog(catalog, new Set(bySlug.keys()));
+      validateVentilationCatalog(JSON.parse(readFileSync(resolve(__dirname, '..', 'content/ventilation-products.json'), 'utf8')), new Set(bySlug.keys()));
       console.log('Catalog structure and component references valid.');
     } catch (error) {
       console.error(`ERROR  catalog: ${error.message}`);

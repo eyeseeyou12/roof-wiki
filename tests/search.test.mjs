@@ -21,9 +21,11 @@ test('unrelated and blank queries produce no guessed answer', () => {
   assert.deepEqual(results('banana satellite'), []);
   assert.deepEqual(results('   '), []);
 });
-test('catalog publishes three sourced examples and no invented Xactimate mappings', () => {
+test('catalog publishes every sourced product and no invented Xactimate mappings', () => {
   const products = Object.values(components).flatMap(c => c.products);
-  assert.equal(products.length, 3);
+  assert.equal(products.length, JSON.parse(readFileSync(new URL('../content/catalog.json', import.meta.url))).products.length);
+  assert.equal(results('Master Flow HCD144 metal dome')[0], 'static-roof-vent');
+  assert.equal(results('VentSure InFlow')[0], 'shingle-over-intake-vent');
   assert.ok(products.every(p => p.sourceUrl.startsWith('https://') && p.verifiedOn));
   assert.ok(Object.values(components).every(c => c.xactimate.length === 0));
 });

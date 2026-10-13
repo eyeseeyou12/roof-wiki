@@ -12,6 +12,7 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { protectSite } from './lib/private-site-build.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -48,6 +49,10 @@ function main() {
     cpSync(join(root, 'node_modules', 'pdfjs-dist', 'build', name), join(siteOut, 'lib', 'vendor', name));
   }
   cpSync(join(root, 'node_modules', 'pdfjs-dist', 'LICENSE'), join(siteOut, 'lib', 'vendor', 'PDFJS-LICENSE'));
+
+  // Private review deployment: advanced Pages Worker serves authenticated assets.
+  // Public static storage contains only an inert locked fallback page.
+  protectSite(siteOut);
 
   console.log(`Assembled static site -> ${siteOut}`);
 }

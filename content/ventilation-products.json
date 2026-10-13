@@ -1,0 +1,240 @@
+{
+  "region": "Central Texas",
+  "verifiedOn": "2026-10-13",
+  "products": [
+    {
+      "id": "oc-strip12",
+      "brand": "Owens Corning",
+      "name": "VentSure 4-Foot Strip · 12-inch cap",
+      "kind": "ridge",
+      "component": "ridge-vent",
+      "source": "https://www.owenscorning.com/en-us/roofing/components/products/4-foot-strip-ridge-vent",
+      "verifiedOn": "2026-10-13",
+      "nfa": 20,
+      "unit": "linear ft",
+      "pieceLength": 4,
+      "minPitch": 3,
+      "maxPitch": 16,
+      "notes": "12-inch shingle-over variant. Narrower versions have different NFA. Cut installed length to suit usable ridge.",
+      "availability": "Roofing distributors; verify variant and local stock.",
+      "additionalSources": [
+        "https://dcpd6wotaa0mb.cloudfront.net/mdms/dms/Roofing/10012271/10012271-Ventsure-Catalog.pdf?v=1746611005000"
+      ],
+      "material": "Plastic"
+    },
+    {
+      "id": "oc-strip10",
+      "brand": "Owens Corning",
+      "name": "VentSure 4-Foot Strip with Weather PROtector · 10-inch cap",
+      "kind": "ridge",
+      "component": "ridge-vent",
+      "source": "https://www.owenscorning.com/en-us/roofing/components/products/4-foot-strip-ridge-vent",
+      "verifiedOn": "2026-10-13",
+      "nfa": 18,
+      "unit": "linear ft",
+      "pieceLength": 4,
+      "minPitch": 3,
+      "maxPitch": 16,
+      "notes": "10-inch shingle-over variant with Weather PROtector moisture barrier; do not substitute the 12-inch rating.",
+      "availability": "Roofing distributors; verify cap width and local stock.",
+      "additionalSources": [
+        "https://dcpd6wotaa0mb.cloudfront.net/mdms/dms/Roofing/10012271/10012271-Ventsure-Catalog.pdf?v=1746611005000"
+      ],
+      "material": "Plastic"
+    },
+    {
+      "id": "rigid3",
+      "brand": "GAF",
+      "name": "Cobra Rigid Vent 3",
+      "kind": "ridge",
+      "component": "ridge-vent",
+      "source": "https://www.gaf.com/en-us/roofing-materials/residential-roofing-materials/attic-vents-other-ventilation/cobra-rigid-vent-3-premium-exhaust-vent-for-roof-ridge",
+      "verifiedOn": "2026-10-13",
+      "nfa": 18,
+      "unit": "linear ft",
+      "pieceLength": 4,
+      "minPitch": 3,
+      "maxPitch": 16,
+      "notes": "Non-filtered ridge exhaust for warmer climates; 10-inch and 12-inch cap variants both provide 18 sq in/ft. Verify slot and end clearances.",
+      "availability": "GAF roofing distributors and major building-material retailers.",
+      "material": "UV-resistant polymer",
+      "additionalSources": [
+        "https://www.gaf.com/en-us/document-library/documents/data-sheets/cobra-rigid-vent-3-exhaust-vent-for-roof-ridge-rescb173_data-sheet.pdf",
+        "https://www.gaf.com/en-us/document-library/documents/codes/rv-29---8-1-20.pdf"
+      ]
+    },
+    {
+      "id": "runner",
+      "brand": "GAF",
+      "name": "Cobra RidgeRunner",
+      "kind": "ridge",
+      "component": "ridge-vent",
+      "source": "https://www.gaf.com/en-us/roofing-materials/residential-roofing-materials/attic-vents-other-ventilation/cobra-ridgerunner-exhaust-vent-for-roof-ridge",
+      "verifiedOn": "2026-10-13",
+      "nfa": 12.5,
+      "unit": "linear ft",
+      "notes": "30-ft roll for 12-inch ridge caps. Filtered model is available in all climates; non-filtered variant is for warmer climates. Cut installed length to fit usable ridge.",
+      "availability": "GAF distribution; verify local stock.",
+      "minPitch": 3,
+      "maxPitch": 16,
+      "pieceLength": 30,
+      "material": "UV-resistant polymer",
+      "additionalSources": [
+        "https://www.gaf.com/en-us/document-library/documents/data-sheets/cobra-ridgerunner-exhaust-vent-for-roof-ridge-data-sheet-rescb171.pdf"
+      ]
+    },
+    {
+      "id": "750g",
+      "brand": "Lomanco",
+      "name": "750-G metal box vent",
+      "kind": "static",
+      "component": "static-roof-vent",
+      "source": "https://www.lomanco.com/lmc-gallery/700-series/",
+      "verifiedOn": "2026-10-13",
+      "nfa": 50,
+      "unit": "vents",
+      "notes": "Galvanized metal static exhaust. Distribute near the high portion of the attic. Check installation instructions.",
+      "availability": "Roofing supply houses; verify finish and local stock.",
+      "material": "Galvanized metal"
+    },
+    {
+      "id": "hcd144",
+      "brand": "GAF",
+      "name": "Master Flow HCD144 metal dome",
+      "kind": "static",
+      "component": "static-roof-vent",
+      "source": "https://www.gaf.com/en-us/roofing-materials/residential-roofing-materials/attic-vents-other-ventilation/master-flow-high-capacity-dome-vent",
+      "verifiedOn": "2026-10-13",
+      "nfa": 144,
+      "unit": "vents",
+      "notes": "Galvanized steel high-capacity dome. Requires product-specific opening and placement.",
+      "availability": "GAF distributors / roofing retailers; confirm the HCD144 model.",
+      "material": "Galvanized steel"
+    },
+    {
+      "id": "oc-inflow",
+      "brand": "Owens Corning",
+      "name": "VentSure InFlow",
+      "kind": "intake",
+      "component": "shingle-over-intake-vent",
+      "source": "https://www.owenscorning.com/en-us/roofing/components/products/inflow-vent",
+      "verifiedOn": "2026-10-13",
+      "nfa": 10,
+      "unit": "linear ft",
+      "pieceLength": 4,
+      "minPitch": 4,
+      "maxPitch": 16,
+      "notes": "Shingle-over low-roof intake for limited or absent soffit intake; verify unobstructed path into attic.",
+      "availability": "Owens Corning roofing distributors; confirm local availability.",
+      "additionalSources": [
+        "https://dcpd6wotaa0mb.cloudfront.net/mdms/dms/Roofing/10012271/10012271-Ventsure-Catalog.pdf?v=1746611005000",
+        "https://champion.owenscorning.com/downloaddmsassets/2147485556.pdf"
+      ],
+      "material": "Plastic"
+    },
+    {
+      "id": "intakepro",
+      "brand": "GAF",
+      "name": "Cobra IntakePro",
+      "kind": "intake",
+      "component": "shingle-over-intake-vent",
+      "source": "https://www.gaf.com/en-us/document-library/documents/data-sheets/cobra-intakepro-rooftop-intake-vent-sell-sheet-rescb176.pdf",
+      "verifiedOn": "2026-10-13",
+      "nfa": 9,
+      "unit": "linear ft",
+      "notes": "Low-roof shingle-over intake for pitches 4:12 and greater. Verify openings and an unobstructed path into the attic.",
+      "availability": "GAF distribution and major building-material retailers.",
+      "minPitch": 4
+    },
+    {
+      "id": "sv10",
+      "brand": "Lomanco",
+      "name": "SV-10 soffit / drip-edge intake",
+      "kind": "intake",
+      "component": "vented-drip-edge",
+      "source": "https://media.lomancovents.com/all_access/sales_literature/lo460_sv-10_flyer.pdf",
+      "verifiedOn": "2026-10-13",
+      "nfa": 6.3,
+      "unit": "linear ft",
+      "pieceLength": 10,
+      "notes": "63 sq in per 10-ft section, not 10 sq in per foot. Aluminum combination soffit vent and drip edge; check gutter and fascia detail.",
+      "availability": "Lomanco distributors; confirm regional stock.",
+      "material": "Aluminum"
+    },
+    {
+      "id": "ab3523",
+      "brand": "Attic Breeze",
+      "name": "UltraBreeze HP AB-3523A / AB-3523D · 35W",
+      "kind": "solar",
+      "component": "solar-attic-fan",
+      "source": "https://atticbreeze.com/wp-content/uploads/2026/08/Attic-Breeze-2026-Catalog.pdf",
+      "verifiedOn": "2026-10-13",
+      "watts": 35,
+      "minIntakePerFan": 864,
+      "maxCoverage": 2850,
+      "notes": "Self-flashing AB-3523A (attached panel) / AB-3523D (detached panel). Manufacturer headline: up to 2,850 sq ft and 1,775 CFM; confirm project sizing. The GEN3 guide recommends at least 6.0 sq ft intake per fan (864 sq in) and 10 ft separation from other fans or passive vents. Metal/tile roofs need the appropriate curb-mount model.",
+      "availability": "Texas manufacturer in Gatesville; authorized distributor network.",
+      "availabilitySource": "https://atticbreeze.com/where-to-buy/",
+      "sizingSource": "https://atticbreeze.com/professionals/ventilation-calculator/",
+      "cfm": 1775,
+      "additionalSources": [
+        "https://atticbreeze.com/wp-content/uploads/2025/04/Attic_Breeze_SFA-SFD_Installation_Guide_English.pdf"
+      ]
+    },
+    {
+      "id": "sr1810",
+      "brand": "Solar Royal",
+      "name": "SR1800 Series SR1810 · 35W",
+      "kind": "solar",
+      "component": "solar-attic-fan",
+      "source": "https://solarroyal.com/forms/2026.2_SolarRoyal_SR1800Series(35W-1810)_SpecSheetv5.20.pdf",
+      "verifiedOn": "2026-10-13",
+      "watts": 35,
+      "cfm": 1825,
+      "maxCoverage": 2955,
+      "minIntakePerFan": null,
+      "notes": "Manufacturer maximum coverage and airflow are performance headlines. Confirm intake, pitch, sun exposure and number of fans for the actual attic before approval.",
+      "availability": "Austin-based manufacturer; direct online ordering.",
+      "availabilitySource": "https://solarroyal.com/",
+      "sizingSource": "https://solarroyal.com/sr1800-faqs/",
+      "material": "ABS composite hood with aluminum base"
+    },
+    {
+      "id": "prsolar2",
+      "brand": "GAF",
+      "name": "Master Flow GreenMachine PRSOLAR2 · 35W",
+      "kind": "solar",
+      "component": "solar-attic-fan",
+      "source": "https://www.gaf.com/en-us/document-library/documents/data-sheets/master-flow-greenmachine-high-power-solar-roof-vent-sell-sheet-resmf163.pdf",
+      "verifiedOn": "2026-10-13",
+      "watts": 35,
+      "cfm": 750,
+      "minPitch": 2,
+      "maxPitch": 12,
+      "notes": "Published sizing table differs from the coverage headline. Use exact recorded rows; other areas need manufacturer sizing confirmation.",
+      "availability": "GAF distribution / major building-material retailers.",
+      "sizingRows": [
+        {
+          "area": 800,
+          "count": 1,
+          "intake": 360
+        },
+        {
+          "area": 1600,
+          "count": 2,
+          "intake": 720
+        },
+        {
+          "area": 2400,
+          "count": 3,
+          "intake": 1080
+        },
+        {
+          "area": 3200,
+          "count": 5,
+          "intake": 1800
+        }
+      ]
+    }
+  ]
+}

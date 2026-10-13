@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {shortlist,assessInventory} from '../site/js/planner-model.mjs';
-import {plannerProducts,solarProduct} from '../site/js/planner-products.mjs';
+import {readFileSync} from 'node:fs';
+const products=JSON.parse(readFileSync(new URL('../content/ventilation-products.json',import.meta.url))).products;
+const plannerProducts=['rigid3','runner','750g'].map(id=>products.find(p=>p.id===id));
+const solarProduct=products.find(p=>p.id==='prsolar2');
 test('ridge candidates reflect actual length constraints without excluding alternatives',()=>{const r=shortlist(plannerProducts,858.7,52);assert.equal(r.find(p=>p.id==='rigid3').quantity,48);assert.equal(r.find(p=>p.id==='runner').fits,false);assert.equal(r.find(p=>p.id==='750g').fits,true);});
 test('unknown ridge is explicitly conditional',()=>assert.match(shortlist(plannerProducts,860)[0].status,/verification/));
 test('rounding never undersizes a target slightly above whole product capacity',()=>assert.equal(shortlist(plannerProducts,864.01,60)[0].quantity,49));

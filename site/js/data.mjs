@@ -22,3 +22,5 @@ export const loadComponents = () => loadJson('/data/components.json');
 export const loadCategories = () => loadJson('/data/categories.json');
 export const loadSearchIndex = () => loadJson('/data/search-index.json');
 export const loadProducts = () => loadJson('/data/products.json');
+
+export const loadVentilationProducts = () => loadJson('/data/ventilation-products.json');
