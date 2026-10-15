@@ -1,6 +1,6 @@
 import { browseCategory } from '/lib/query.mjs';
 import { loadCategories, loadComponents } from './data.mjs';
-import { el, escapeHtml, shortLine, componentHref } from './render.mjs';
+import { el, escapeHtml, shortLine, componentHref, loadError } from './render.mjs';
 
 const titleEl = document.getElementById('category-title');
 const listEl = document.getElementById('component-list');
@@ -39,4 +39,7 @@ async function init() {
   }
 }
 
-init();
+init().catch(() => {
+  titleEl.textContent = 'Category unavailable';
+  listEl.replaceChildren(el('li', {}, [loadError('This category could not load. Check your connection and try again.')]));
+});

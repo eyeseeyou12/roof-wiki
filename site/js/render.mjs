@@ -44,3 +44,10 @@ export function componentHref(slug) {
 export function categoryHref(slug) {
   return `/category.html?slug=${encodeURIComponent(slug)}`;
 }
+
+// A consistent recovery action for pages whose data could not be loaded.
+export function loadError(message) {
+  const reload = el('button', { type: 'button', class: 'secondary', text: 'Reload page' });
+  reload.addEventListener('click', () => location.reload());
+  return el('div', { class: 'notice', role: 'alert' }, [el('p', { text: message }), reload]);
+}

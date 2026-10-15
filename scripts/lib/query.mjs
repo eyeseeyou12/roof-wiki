@@ -5,64 +5,54 @@
 // than reading files itself.
 import MiniSearch from 'minisearch';
 
+const STOP_WORDS = new Set('a an the is it its this that what where on in at of for to with and or my i have need looking like looks roof roofing'.split(' '));
+function tokens(text) {
+  // Keep model suffixes attached: 750-G, 750 G, and 750G share one token.
+  // A different suffix must not match an unrelated word in the description.
+  return normalizeQuery(text)
+    .replace(/\b(\d+)\s+([a-z])\b/g, '$1$2')
+    .split(' ').filter(term => term && !STOP_WORDS.has(term));
+}
+
 export function createSearchIndex(searchIndexRows) {
   const mini = new MiniSearch({
     idField: 'id',
-    fields: ['text'],
-    storeFields: ['componentSlug', 'componentName', 'text', 'dialect', 'kind', 'notes'],
+    fields: ['text', 'aliases', 'description', 'products'],
+    storeFields: ['componentSlug', 'text', 'aliases', 'description', 'products'],
+    tokenize: tokens,
   });
   mini.addAll(searchIndexRows);
   return mini;
 }
 
-// Fuzzy + prefix search over names and aliases. Never collapses a
-// shared alias down to one component — every component with a matching
-// alias is returned, each labeled with the specific alias and dialect
-// that matched, so a "louver vent" search surfaces both gable vent and
-// box vent rather than guessing.
-export function search(miniIndex, componentsBySlug, queryText, { limit = 5, scoreCutoffRatio = 0.4 } = {}) {
-  const trimmed = queryText.trim();
-  if (!trimmed) return [];
-
-  // AND-combine query terms: a multi-word query like "louver vent" only
-  // matches documents containing both words. Without this, "vent" alone
-  // — a substring of nearly every alias in this domain — lights up
-  // almost the whole index at a low score, burying the real matches in
-  // noise. combineWith: 'AND' plus the score-relative cutoff below are
-  // both there for the same reason: a confident-looking wrong answer is
-  // worse than an empty result.
-  const hits = miniIndex.search(trimmed, {
-    fuzzy: 0.2,
+// All significant words must match, but may occur in different fields.
+// Descriptions only use existing content; search never synthesizes facts.
+export function search(miniIndex, componentsBySlug, queryText, { limit = 5, scoreCutoffRatio = 0.25 } = {}) {
+  const query = tokens(queryText).join(' ');
+  if (!query) return [];
+  const hits = miniIndex.search(query, {
+    fuzzy: term => term.length >= 5 ? 0.34 : false,
     prefix: true,
     combineWith: 'AND',
-    boost: { text: 1 },
+    boost: { text: 6, aliases: 4, products: 3, description: 1 },
   });
-
   const bySlug = new Map();
   for (const hit of hits) {
-    const component = componentsBySlug[hit.componentSlug];
-    if (!component) continue;
-    if (!bySlug.has(hit.componentSlug)) {
-      bySlug.set(hit.componentSlug, {
-        slug: hit.componentSlug,
-        displayName: component.displayName,
-        summary: component.summary,
-        entryType: component.entryType,
-        disambiguation: component.disambiguation,
-        score: hit.score,
-        matches: [],
-      });
-    }
-    const entry = bySlug.get(hit.componentSlug);
-    entry.score = Math.max(entry.score, hit.score);
-    entry.matches.push({ text: hit.text, dialect: hit.dialect, kind: hit.kind });
+    const c = componentsBySlug[hit.componentSlug];
+    if (!c) continue;
+    const exact = [c.displayName, ...c.aliases.map(a => a.name)].some(t => normalizeQuery(t) === normalizeQuery(queryText));
+    const matchedFields = [...new Set(Object.values(hit.match || {}).flat())];
+    const labels = { text: 'Name', aliases: 'Also known as', description: 'Description / purpose', products: 'Product / specification' };
+    const result = {
+      slug: c.slug, displayName: c.displayName, summary: c.summary,
+      entryType: c.entryType, disambiguation: c.disambiguation,
+      score: hit.score * (exact ? 3 : 1),
+      matches: matchedFields.map(field => ({ kind: field, text: labels[field] || field })),
+    };
+    if (!bySlug.has(c.slug) || bySlug.get(c.slug).score < result.score) bySlug.set(c.slug, result);
   }
-
-  const ranked = [...bySlug.values()].sort((a, b) => b.score - a.score);
-  const topScore = ranked[0]?.score ?? 0;
-  return ranked
-    .filter((r) => r.score >= topScore * scoreCutoffRatio)
-    .slice(0, limit);
+  const ranked = [...bySlug.values()].sort((a,b) => b.score - a.score);
+  return ranked.filter(r => r.score >= (ranked[0]?.score || 0) * scoreCutoffRatio).slice(0, limit);
 }
 
 export function browseCategory(categories, componentsBySlug, categorySlug) {

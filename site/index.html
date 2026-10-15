@@ -12,13 +12,17 @@
 
   <main>
     <h1>What's on your roof?</h1>
-    <p class="subtitle">A reference for roof penetrations, vents, and intake — what something's called, what it does, and what class of thing can replace it. Not a place to buy anything.</p>
+    <p class="subtitle">Identify roof penetrations, vents, and intake. Find replacement guidance, product specifications, and sourced references.</p>
 
+    <form action="/search.html" role="search" class="main-search">
+      <label for="home-q">Name, description, brand, or model</label>
+      <div class="search-row"><input id="home-q" name="q" type="search" placeholder="Try humid bathroom air or Broan 634M" required><button type="submit">Search</button></div>
+    </form>
     <div class="doors">
       <a class="door" href="/search.html" data-door="search">
-        <span class="eyebrow">Search a name</span>
+        <span class="eyebrow">Search components</span>
         <h3>Know a name, need to know what it is?</h3>
-        <p>Search by what's stamped on it, what a contractor called it, or a nickname you heard. Search covers every alias, not just the official name.</p>
+        <p>Search by what's stamped on it, what a contractor called it, or a nickname you heard. Search includes aliases, descriptions, and sourced product details.</p>
       </a>
 
       <a class="door" href="/browse.html" data-door="browse">
@@ -42,7 +46,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>roof-wiki is a reference, not an estimating tool — it never names a part number, only what class of thing can replace something and what to go measure.</p>
+    <p>Product examples and specifications link to their sources. Component review status is shown on each entry.</p>
   </footer>
 
   <script type="module">

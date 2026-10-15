@@ -56,8 +56,11 @@ export function roofAreaToFloorArea(roofAreaSqFt, pitchRise, pitchRun = 12) {
   if (!Number.isFinite(pitchRise) || pitchRise < 0) {
     throw new VentilationCalculatorError('pitchRise must be a non-negative number');
   }
+  if (!Number.isFinite(pitchRun) || pitchRun <= 0) {
+    throw new VentilationCalculatorError('pitchRun must be a positive number');
+  }
   const slopeFactor = Math.sqrt(pitchRise * pitchRise + pitchRun * pitchRun) / pitchRun;
-  return round1(roofAreaSqFt / slopeFactor);
+  return roofAreaSqFt / slopeFactor;
 }
 
 // A roof is often more than one pitch (this module's own test data
@@ -80,7 +83,7 @@ export function estimateAtticFloorAreaFromRoofSegments(segments) {
     (sum, seg) => sum + roofAreaToFloorArea(seg.roofAreaSqFt, seg.pitchRise, seg.pitchRun ?? 12),
     0
   );
-  return round1(total);
+  return total;
 }
 
 // Three ways to arrive at atticSquareFootage for calculateRequiredNfa,
@@ -131,7 +134,7 @@ export function estimateAtticFloorArea({ segments, eaveLengthFt = null, overhang
   }
 
   const overhangAreaSqFt = eaveLengthFt * overhangDepthFt;
-  const corrected = round1(Math.max(pitchOnlyEstimate - overhangAreaSqFt, 0));
+  const corrected = Math.max(pitchOnlyEstimate - overhangAreaSqFt, 0);
 
   return {
     atticSquareFootage: corrected,
@@ -147,17 +150,18 @@ export function calculateRequiredNfa({ atticSquareFootage, exceptionConditionsCo
     throw new VentilationCalculatorError('atticSquareFootage must be a positive number');
   }
 
-  const ratio = exceptionConditionsConfirmed ? 300 : 150;
-  const totalNfaSqIn = (atticSquareFootage / ratio) * 144;
+  const ratio = exceptionConditionsConfirmed === true ? 300 : 150;
+  const totalNfaSqIn = atticSquareFootage * (144 / ratio);
   const exhaustNfaSqIn = totalNfaSqIn / 2;
   const intakeNfaSqIn = totalNfaSqIn / 2;
 
   return {
     ratioUsed: `1/${ratio}`,
     atticSquareFootage,
-    totalNfaSqIn: round1(totalNfaSqIn),
-    exhaustNfaSqIn: round1(exhaustNfaSqIn),
-    intakeNfaSqIn: round1(intakeNfaSqIn),
+    // Keep calculation precision through product takeoffs; round only in UI.
+    totalNfaSqIn,
+    exhaustNfaSqIn,
+    intakeNfaSqIn,
   };
 }
 
